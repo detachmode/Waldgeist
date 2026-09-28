@@ -4,6 +4,10 @@
 
 Der Skillbaum ist die einzige Meta-Progression: Vor dem Run baut man ihn aus gefundenen Tafeln (Skillbaumfragmente), im Run lernt man seine Fähigkeiten mit Skillpunkten. Level und Items beginnen jeden Run bei null.
 
+![Holztafel leer (links) und mit Bernstein gesockelt (rechts)](images/tafeln.webp)
+
+*Links eine leere Holztafel mit 3 Naturfähigkeiten und leerem Sockel, rechts dieselbe Tafel mit gesockeltem Bernstein.*
+
 - **Tafeln:** werden in Runs gefunden und bleiben dauerhaft. Jede Holztafel trägt 3 zufällige Naturfähigkeiten eines Themas und einen leeren Sockel. Ein gesockelter Stein schaltet eine vierte, magische Fähigkeit frei und bindet die Tafel dauerhaft an ihren Platz.
 - **Raster:** Tafeln sind viereckig und liegen auf einem Quadratraster um den Klassenstein (Kern). Benachbart sind Tafeln, die sich an einer Kante berühren (oben, unten, links, rechts), Diagonalen zählen nicht. Der Ring ist die Entfernung vom Kern in Schritten über Nachbarn, also Ring 1 sind die vier Tafeln direkt am Kern.
 - **Coop-Deckel:** Die Tafelanzahl des schwächsten Spielers begrenzt alle. Stärkere wählen einen zusammenhängenden Ausschnitt, der am Kern hängt. Der Kern zählt nicht mit.
