@@ -9,6 +9,8 @@ Das Setting sind jedoch keine Dungeons, sondern ein mystischer Wald: Je tiefer m
 - Holzhacken und Bäume fällen, um Gegner zu töten oder Holz zu sammeln.
 - Aktionen kosten Nahrung, Laufen dagegen nicht oder nur sehr wenig. Wer am Verhungern ist, bezahlt Aktionen mit Lebenspunkten.
 - Aus Holz kann man Barrikaden oder kleine Türme bauen, um Gegner zu behindern oder die Sichtweite zu verbessern.
+- jagen von Tieren um Essen zu machen am Lagerfeuer
+- es gibt Hütten im Wald, wo man rein kann zum looten oder Gegner bekämpfen 
 
 ## Dokumentation
 
