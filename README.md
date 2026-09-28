@@ -14,7 +14,7 @@ Das Setting sind jedoch keine Dungeons, sondern ein mystischer Wald: Je tiefer m
 
 ## Balancing
 
-Es gibt mehrere Schwierigkeitsgrade. Vor dem Start eines Runs wählt man, mit welchem man spielt.
+Es gibt zwei Schwierigkeitsgrade. Vor dem Start eines Runs wählt man, mit welchem man spielt.
 
 ## Dokumentation
 
