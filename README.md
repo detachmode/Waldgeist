@@ -12,6 +12,10 @@ Das Setting sind jedoch keine Dungeons, sondern ein mystischer Wald: Je tiefer m
 - jagen von Tieren um Essen zu machen am Lagerfeuer
 - es gibt Hütten im Wald, wo man rein kann zum looten oder Gegner bekämpfen 
 
+## Balancing
+
+Es gibt mehrere Schwierigkeitsgrade. Vor dem Start eines Runs wählt man, mit welchem man spielt.
+
 ## Dokumentation
 
 - [Tafel-Skillsystem und Fähigkeitenpool](docs/skill-tree.md): Skillbaum, Startklassen, Themen, Edelsteine, Coop-Kombos und Effektsystem.
