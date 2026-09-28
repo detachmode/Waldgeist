@@ -8,7 +8,7 @@ Der Skillbaum ist die einzige Meta-Progression: Vor dem Run baut man ihn aus gef
 
 *Links eine leere Holztafel mit 3 Naturfähigkeiten und leerem Sockel, rechts dieselbe Tafel mit gesockeltem Bernstein.*
 
-- **Tafeln:** werden in Runs gefunden und bleiben dauerhaft. Jede Holztafel trägt 3 zufällige Naturfähigkeiten eines Themas und einen leeren Sockel. Ein gesockelter Stein schaltet eine vierte, magische Fähigkeit frei und bindet die Tafel dauerhaft an ihren Platz.
+- **Tafeln:** werden in Runs gefunden und bleiben dauerhaft. Eine intakte Holztafel trägt 3 zufällige Naturfähigkeiten eines Themas und einen leeren Sockel. Tafeln können aber kaputt sein: Dann haben sie nur 1 oder 2 Fähigkeiten, und der Sockel kann fehlen. Ohne Sockel lässt sich kein Stein einsetzen. Ein gesockelter Stein schaltet eine vierte, magische Fähigkeit frei und bindet die Tafel dauerhaft an ihren Platz.
 - **Raster:** Tafeln sind viereckig und liegen auf einem Quadratraster um den Klassenstein (Kern). Benachbart sind Tafeln, die sich an einer Kante berühren (oben, unten, links, rechts), Diagonalen zählen nicht. Der Ring ist die Entfernung vom Kern in Schritten über Nachbarn, also Ring 1 sind die vier Tafeln direkt am Kern.
 - **Pfade und Ausgänge:** Zwischen den Tafeln führen Pfade. Um von einer Tafel auf die nächste zu kommen, muss man durch einen vorgefertigten Ausgang an der Kante gehen. Nicht jede Tafel hat an jeder Kante einen Ausgang, manche haben nur wenige. Die Ausgänge stehen beim Fund fest. Eine gute Tafel mit vielen Ausgängen zu finden, ist also auch Glück. Der Kern hat an allen vier Kanten einen Ausgang.
 - **Coop-Deckel:** Die Tafelanzahl des schwächsten Spielers begrenzt alle. Stärkere wählen einen Ausschnitt, der über Ausgänge zusammenhängt und am Kern hängt. Der Kern zählt nicht mit.
@@ -83,7 +83,7 @@ Ein Stein im Sockel einer Holztafel schaltet deren vierte, magische Fähigkeit f
 - **Sockeln:** nur zwischen den Runs im Charakterbildschirm, mit klarer Bestätigung.
 - **Bindung:** Eine gesockelte Tafel bleibt fest an ihrem Platz, lässt sich nicht entfernen oder tauschen und leuchtet in der Farbe ihres Steins.
 - **Tauschen:** Lose Steine und ungesockelte Tafeln bleiben tauschbar.
-- **Lernen im Run:** Die Magiefähigkeit ist lernbar, sobald 2 der 3 Holzfähigkeiten der Tafel gelernt sind. Magiefähigkeiten haben einen Rang.
+- **Lernen im Run:** Die Magiefähigkeit ist lernbar, sobald 2 der 3 Holzfähigkeiten der Tafel gelernt sind. Bei einer kaputten Tafel mit weniger Fähigkeiten müssen alle ihre Holzfähigkeiten gelernt sein. Magiefähigkeiten haben einen Rang.
 - **Coop:** Mindestring und Deckel greifen ineinander. Hat der schwächste Spieler weniger als 3 Tafeln, bleiben dunkle Magie und Diamanten für alle unerreichbar.
 - **Notausgang:** Ein sehr seltener Gegenstand vom Endboss zieht die Magie heraus. Der Stein wird zerstört, die Tafel wird frei.
 - **Darstellung:** Bernstein honigbraun und trüb, Topas klar zitronengelb, damit man sie auf dem Handy auseinanderhält.
@@ -172,7 +172,7 @@ Dorn kontrolliert das Feld und macht Schaden über Zeit.
 
 ## Würfelregeln
 
-Jede Holztafel zieht 3 verschiedene Fähigkeiten aus den 6 normalen ihres Themas und hat einen leeren Sockel. Jeder Stein trägt eine zufällige Fähigkeit aus dem Pool seines Typs. Das Ergebnis wird beim Fund gespeichert, nicht als Seed.
+Jede Holztafel zieht zuerst, ob sie intakt oder kaputt ist. Eine intakte Tafel zieht 3 verschiedene Fähigkeiten aus den 6 normalen ihres Themas und hat einen leeren Sockel. Eine kaputte Tafel hat nur 1 oder 2 Fähigkeiten, und ihr Sockel ist vorhanden oder fehlt. Jeder Stein trägt eine zufällige Fähigkeit aus dem Pool seines Typs. Das Ergebnis wird beim Fund gespeichert, nicht als Seed.
 
 - Höchstens eine aktive Fähigkeit pro Tafel.
 - Jede Tafel zieht auch ihre Ausgänge: an jeder der vier Kanten ist einer da oder nicht, jede Tafel hat mindestens einen. Tafeln mit vielen Ausgängen sind seltener.
@@ -239,6 +239,7 @@ Der Pool braucht 20 Hooks. Die Coop-Fähigkeiten hängen an globalen Hooks, die 
 
 Alle Zahlen sind erste Schätzungen und müssen im Playtest geprüft werden.
 
+- [ ] Kaputte Tafeln festlegen: Wie häufig sind sie, wie verteilen sich 1 oder 2 Fähigkeiten, wie oft fehlt der Sockel? Kann man Tafeln reparieren?
 - [ ] Regeln für Ausgänge festlegen: Reicht ein Ausgang auf einer Seite, oder müssen beide Kanten einen haben? Wie viele Ausgänge im Schnitt, wie selten sind Tafeln mit vier?
 - [ ] Bild der Tafeln um Ausgänge ergänzen (bisher ohne)
 - [ ] Skillpunkte pro Run festlegen, Annahme bisher etwa 15 bis zum Endboss
