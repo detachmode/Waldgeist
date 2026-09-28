@@ -13,7 +13,8 @@ Der Skillbaum ist die einzige Meta-Progression: Vor dem Run baut man ihn aus gef
 - **Pfade und Ausgänge:** Zwischen den Tafeln führen Pfade. Um von einer Tafel auf die nächste zu kommen, muss man durch einen vorgefertigten Ausgang an der Kante gehen. Nicht jede Tafel hat an jeder Kante einen Ausgang, manche haben nur wenige. Die Ausgänge stehen beim Fund fest. Eine gute Tafel mit vielen Ausgängen zu finden, ist also auch Glück. Der Kern hat an allen vier Kanten einen Ausgang.
 - **Coop-Deckel:** Die Tafelanzahl des schwächsten Spielers begrenzt alle. Stärkere wählen einen Ausschnitt, der über Ausgänge zusammenhängt und am Kern hängt. Der Kern zählt nicht mit.
 - **Skillpunkte:** Erfahrung wird geteilt, beide steigen gleichzeitig auf. Pro Level-Up gibt es 1 Skillpunkt, bis zum Endboss etwa 15.
-- **Erreichbarkeit:** Tafeln am Kern sind von Anfang an erreichbar. Weitere Tafeln werden erreichbar, sobald in einer über einen Ausgang verbundenen Tafel eine Fähigkeit gelernt wurde. Eine bloß angrenzende Tafel ohne Ausgang dazwischen zählt nicht. Innerhalb einer erreichbaren Tafel lernt man frei.
+- **Verbindungen in der Tafel:** Die Fähigkeiten einer Tafel, also die Holzfähigkeiten und die Magiefähigkeit, sind nicht frei wählbar, sondern durch Pfade miteinander verbunden. Welche Fähigkeit mit welcher verbunden ist, wird beim Fund zufällig gewürfelt und bleibt fest. Eine Fähigkeit ist lernbar, sobald ein Pfad zu ihr führt, dessen anderes Ende schon gelernt ist. Das gilt auch für die Magiefähigkeit: Sie ist erlernbar, sobald ein Pfad von einer gelernten Fähigkeit zu ihr führt. Manche Tafeln haben die Magie also direkt neben dem Einstieg, bei anderen liegt sie hinter zwei oder drei Holzfähigkeiten.
+- **Erreichbarkeit:** Tafeln am Kern sind von Anfang an erreichbar. Weitere Tafeln werden erreichbar, sobald in einer über einen Ausgang verbundenen Tafel eine Fähigkeit gelernt wurde. Eine bloß angrenzende Tafel ohne Ausgang dazwischen zählt nicht. Innerhalb einer Tafel gelten die Verbindungen zwischen ihren Fähigkeiten (siehe **Verbindungen in der Tafel**).
 - **Starke Tafeln:** Holztafeln mit starker Fähigkeit aus Zone 3 oder tiefer dürfen nur ab Ring 2 liegen. Gesockelte Tafeln müssen zusätzlich im Mindestring ihres Steins liegen.
 - **Im Run:** Lernen nur außerhalb von Begegnungen, kein Umverteilen.
 
@@ -83,7 +84,7 @@ Ein Stein im Sockel einer Holztafel schaltet deren vierte, magische Fähigkeit f
 - **Sockeln:** nur zwischen den Runs im Charakterbildschirm, mit klarer Bestätigung.
 - **Bindung:** Eine gesockelte Tafel bleibt fest an ihrem Platz, lässt sich nicht entfernen oder tauschen und leuchtet in der Farbe ihres Steins.
 - **Tauschen:** Lose Steine und ungesockelte Tafeln bleiben tauschbar.
-- **Lernen im Run:** Die Magiefähigkeit ist lernbar, sobald 2 der 3 Holzfähigkeiten der Tafel gelernt sind. Bei einer kaputten Tafel mit weniger Fähigkeiten müssen alle ihre Holzfähigkeiten gelernt sein. Magiefähigkeiten haben einen Rang.
+- **Lernen im Run:** Die Magiefähigkeit ist lernbar, sobald ein Pfad von einer gelernten Fähigkeit der Tafel zu ihr führt (siehe **Verbindungen in der Tafel**). Magiefähigkeiten haben einen Rang.
 - **Coop:** Mindestring und Deckel greifen ineinander. Hat der schwächste Spieler weniger als 3 Tafeln, bleiben dunkle Magie und Diamanten für alle unerreichbar.
 - **Notausgang:** Ein sehr seltener Gegenstand vom Endboss zieht die Magie heraus. Der Stein wird zerstört, die Tafel wird frei.
 - **Darstellung:** Bernstein honigbraun und trüb, Topas klar zitronengelb, damit man sie auf dem Handy auseinanderhält.
@@ -175,6 +176,7 @@ Dorn kontrolliert das Feld und macht Schaden über Zeit.
 Jede Holztafel zieht zuerst, ob sie intakt oder kaputt ist. Eine intakte Tafel zieht 3 verschiedene Fähigkeiten aus den 6 normalen ihres Themas und hat einen leeren Sockel. Eine kaputte Tafel hat nur 1 oder 2 Fähigkeiten, und ihr Sockel ist vorhanden oder fehlt. Jeder Stein trägt eine zufällige Fähigkeit aus dem Pool seines Typs. Das Ergebnis wird beim Fund gespeichert, nicht als Seed.
 
 - Höchstens eine aktive Fähigkeit pro Tafel.
+- Jede Tafel zieht auch die Pfade zwischen ihren Fähigkeiten. Alle Fähigkeiten einer Tafel hängen zusammen, keine liegt allein.
 - Jede Tafel zieht auch ihre Ausgänge: an jeder der vier Kanten ist einer da oder nicht, jede Tafel hat mindestens einen. Tafeln mit vielen Ausgängen sind seltener.
 - Holztafeln aus Zone 3 oder tiefer können einen Platz gegen die starke Fähigkeit ihres Themas tauschen und dürfen nur ab Ring 2 liegen.
 - Gefundene Tafeln sind bis zum Ende des Runs verwittert und unleserlich. Gespeichert werden sie trotzdem sofort beim Fund.
@@ -239,6 +241,7 @@ Der Pool braucht 20 Hooks. Die Coop-Fähigkeiten hängen an globalen Hooks, die 
 
 Alle Zahlen sind erste Schätzungen und müssen im Playtest geprüft werden.
 
+- [ ] Einstieg in eine Tafel festlegen: Welche Fähigkeit ist als erste lernbar, wenn man durch einen Ausgang kommt? Mit welcher Fähigkeit sind die Ausgänge verbunden?
 - [ ] Kaputte Tafeln festlegen: Wie häufig sind sie, wie verteilen sich 1 oder 2 Fähigkeiten, wie oft fehlt der Sockel? Kann man Tafeln reparieren?
 - [ ] Regeln für Ausgänge festlegen: Reicht ein Ausgang auf einer Seite, oder müssen beide Kanten einen haben? Wie viele Ausgänge im Schnitt, wie selten sind Tafeln mit vier?
 - [ ] Bild der Tafeln um Ausgänge ergänzen (bisher ohne)
