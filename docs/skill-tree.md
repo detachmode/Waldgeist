@@ -10,9 +10,10 @@ Der Skillbaum ist die einzige Meta-Progression: Vor dem Run baut man ihn aus gef
 
 - **Tafeln:** werden in Runs gefunden und bleiben dauerhaft. Jede Holztafel trägt 3 zufällige Naturfähigkeiten eines Themas und einen leeren Sockel. Ein gesockelter Stein schaltet eine vierte, magische Fähigkeit frei und bindet die Tafel dauerhaft an ihren Platz.
 - **Raster:** Tafeln sind viereckig und liegen auf einem Quadratraster um den Klassenstein (Kern). Benachbart sind Tafeln, die sich an einer Kante berühren (oben, unten, links, rechts), Diagonalen zählen nicht. Der Ring ist die Entfernung vom Kern in Schritten über Nachbarn, also Ring 1 sind die vier Tafeln direkt am Kern.
-- **Coop-Deckel:** Die Tafelanzahl des schwächsten Spielers begrenzt alle. Stärkere wählen einen zusammenhängenden Ausschnitt, der am Kern hängt. Der Kern zählt nicht mit.
+- **Pfade und Ausgänge:** Zwischen den Tafeln führen Pfade. Um von einer Tafel auf die nächste zu kommen, muss man durch einen vorgefertigten Ausgang an der Kante gehen. Nicht jede Tafel hat an jeder Kante einen Ausgang, manche haben nur wenige. Die Ausgänge stehen beim Fund fest. Eine gute Tafel mit vielen Ausgängen zu finden, ist also auch Glück. Der Kern hat an allen vier Kanten einen Ausgang.
+- **Coop-Deckel:** Die Tafelanzahl des schwächsten Spielers begrenzt alle. Stärkere wählen einen Ausschnitt, der über Ausgänge zusammenhängt und am Kern hängt. Der Kern zählt nicht mit.
 - **Skillpunkte:** Erfahrung wird geteilt, beide steigen gleichzeitig auf. Pro Level-Up gibt es 1 Skillpunkt, bis zum Endboss etwa 15.
-- **Erreichbarkeit:** Tafeln am Kern sind von Anfang an erreichbar. Weitere Tafeln werden erreichbar, sobald in einer angrenzenden Tafel eine Fähigkeit gelernt wurde. Innerhalb einer erreichbaren Tafel lernt man frei.
+- **Erreichbarkeit:** Tafeln am Kern sind von Anfang an erreichbar. Weitere Tafeln werden erreichbar, sobald in einer über einen Ausgang verbundenen Tafel eine Fähigkeit gelernt wurde. Eine bloß angrenzende Tafel ohne Ausgang dazwischen zählt nicht. Innerhalb einer erreichbaren Tafel lernt man frei.
 - **Starke Tafeln:** Holztafeln mit starker Fähigkeit aus Zone 3 oder tiefer dürfen nur ab Ring 2 liegen. Gesockelte Tafeln müssen zusätzlich im Mindestring ihres Steins liegen.
 - **Im Run:** Lernen nur außerhalb von Begegnungen, kein Umverteilen.
 
@@ -174,6 +175,7 @@ Dorn kontrolliert das Feld und macht Schaden über Zeit.
 Jede Holztafel zieht 3 verschiedene Fähigkeiten aus den 6 normalen ihres Themas und hat einen leeren Sockel. Jeder Stein trägt eine zufällige Fähigkeit aus dem Pool seines Typs. Das Ergebnis wird beim Fund gespeichert, nicht als Seed.
 
 - Höchstens eine aktive Fähigkeit pro Tafel.
+- Jede Tafel zieht auch ihre Ausgänge: an jeder der vier Kanten ist einer da oder nicht, jede Tafel hat mindestens einen. Tafeln mit vielen Ausgängen sind seltener.
 - Holztafeln aus Zone 3 oder tiefer können einen Platz gegen die starke Fähigkeit ihres Themas tauschen und dürfen nur ab Ring 2 liegen.
 - Gefundene Tafeln sind bis zum Ende des Runs verwittert und unleserlich. Gespeichert werden sie trotzdem sofort beim Fund.
 - Auf dem Handy gibt es 3 Schnelltasten, also höchstens 3 aktive Fähigkeiten pro Run, Kern- und Magiefähigkeiten eingeschlossen.
@@ -237,6 +239,8 @@ Der Pool braucht 20 Hooks. Die Coop-Fähigkeiten hängen an globalen Hooks, die 
 
 Alle Zahlen sind erste Schätzungen und müssen im Playtest geprüft werden.
 
+- [ ] Regeln für Ausgänge festlegen: Reicht ein Ausgang auf einer Seite, oder müssen beide Kanten einen haben? Wie viele Ausgänge im Schnitt, wie selten sind Tafeln mit vier?
+- [ ] Bild der Tafeln um Ausgänge ergänzen (bisher ohne)
 - [ ] Skillpunkte pro Run festlegen, Annahme bisher etwa 15 bis zum Endboss
 - [ ] Deckel im Playtest prüfen, eventuell lockern auf Minimum plus eine Tafel
 - [ ] Drop-Raten für Tafeln und Steine pro Zone festlegen
