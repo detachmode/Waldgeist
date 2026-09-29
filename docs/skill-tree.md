@@ -42,6 +42,21 @@ Fernkampf und Späherin. Startet mit einem Bogen und 10 Pfeilen, die man wieder 
 | Leichtfüßig | +15 % Ausweichen | 1 | `stat` |
 | Durchschuss (aktiv) | Pfeil trifft alle Gegner in einer Linie bis zum nächsten Baum, +2 Schaden, Abklingzeit 12 Runden | 1 | `active` |
 
+## Themen der Holztafeln
+
+Jede Holztafel gehört zu einem Thema. Das Thema bestimmt, aus welchem Pool die Naturfähigkeiten der Tafel stammen. Eine intakte Tafel zieht daraus 3 der 6 normalen Fähigkeiten. Die starke Fähigkeit eines Themas gibt es nur auf Tafeln aus Zone 3 oder tiefer.
+
+Themen sind unabhängig von Klasse und Edelsteinen: Die Klasse gibt die 3 Kern-Fähigkeiten, der Edelstein die magische Fähigkeit. Alles andere kommt aus den Themen der Tafeln. Man kann Tafeln verschiedener Themen mischen, um seinen Build zu bauen.
+
+Jedes Thema hat ein eigenes Aussehen (Holzart, Randfarbe, Zierelement), damit man es auf einen Blick erkennt, auch auf dem kleinen Handy-Display. Gesockelte Tafeln behalten das Aussehen ihres Themas, leuchten aber zusätzlich in der Farbe ihres Steins.
+
+| Thema | Ausrichtung | Holz | Randfarbe | Zierelement |
+| --- | --- | --- | --- | --- |
+| Eiche | Verteidigung und Holz | dunkles, grobes Eichenholz | Eisenbeschläge, grau | Eichenblatt und Eichel, breite Tafel mit dickem Rand |
+| Moos | Heilung und Wissen | helles, feuchtes Holz | dickes grünes Moos | Pilze und Farn, weicher bewachsener Rand |
+| Dorn | Gift, Fallen und Kontrolle | verwittertes, graues Holz | dunkelrot bis violett | Dornenranken, kleine Zacken am Rand |
+| Lagerfeuer | Nahrung und Versorgung | verkohltes Holz | Glutkante in Orange | Flamme |
+
 ## Thema Eiche: Verteidigung und Holz
 
 Eiche hält die Linie und nutzt Bäume als Deckung und Waffe.
@@ -83,6 +98,10 @@ Dorn kontrolliert das Feld und macht Schaden über Zeit.
 | Rankenfessel (aktiv) | Wurzelt einen Gegner in Sichtweite 3 Runden fest, Abklingzeit 20 Runden | 1 | `active` |
 | Umschlingen (Coop) | Trifft ein Verbündeter einen von dir vergifteten Gegner, wird dieser eine Runde festgewurzelt, höchstens alle 5 Runden pro Gegner | 1 | `on_damage` |
 | Dornenkrone (stark) | Gift stapelt sich unbegrenzt, ab 10 Stapeln platzt der Gegner und vergiftet alle Nachbarn | 1 | `on_status_applied` |
+
+## Thema Lagerfeuer: Nahrung und Versorgung
+
+Lagerfeuer nutzt das Hunger-System: Es macht Nahrung zu einer Stärke, lässt Tiere jagen und am Feuer kochen und gibt der Gruppe Rast und Wärme. Die Fähigkeiten dieses Themas sind noch offen.
 
 ## Edelsteine
 
@@ -277,7 +296,9 @@ Alle Zahlen sind erste Schätzungen und müssen im Playtest geprüft werden.
 - [ ] Deckel im Playtest prüfen, eventuell lockern auf Minimum plus eine Tafel
 - [ ] Drop-Raten für Tafeln und Steine pro Zone festlegen
 - [ ] Seltenheit des Notausgangs festlegen, der Steine wieder entfernt
-- [ ] Viertes Holzthema ergänzen, Vorschlag: Jagd für Beweglichkeit und Fernkampf
+- [ ] Fähigkeitenpool für Lagerfeuer festlegen (6 normale, 1 starke, mit Coop-Fähigkeiten und Hooks)
+- [ ] Tafelbild pro Thema erstellen, jeweils leer und gesockelt. Darauf achten, dass die orange Glutkante von Lagerfeuer nicht mit dem Bernstein-Leuchten verwechselt wird
+- [ ] Jagd (Beweglichkeit und Fernkampf) als fünftes Thema oder für später vormerken
 - [ ] Gestrichene Glut-Fähigkeiten (Glimmende Klinge, Feuerfest, Funkenflug) eventuell als weitere Topas-Fähigkeiten zurückholen
 - [ ] Onyx nach dem Prototyp umsetzen, sobald Beschwörungen mit KI und Synchronisierung stehen
 - [ ] Pool auf 10 bis 12 Fähigkeiten pro Holzthema ausbauen, damit Tafeln sich weniger ähneln
