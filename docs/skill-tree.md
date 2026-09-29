@@ -20,7 +20,7 @@ Der Skillbaum ist die einzige Meta-Progression: Vor dem Run baut man ihn aus gef
 
 ## Startklassen
 
-Jeder Klassenstein trägt 3 feste Fähigkeiten mit je 3 Rängen, also 9 Punkte. Er ist immer dabei, sichert die Identität der Klasse und fängt überzählige Punkte auf, wenn ein Spieler nur wenige Tafeln hat.
+Jeder Klassenstein trägt nur 3 feste Fähigkeiten mit je 1 Rang, also 3 Punkte. Er ist immer dabei und sichert die Identität der Klasse. Der Rest der Punkte fließt in die Tafeln, damit der Kern die Tafeln nicht verdrängt.
 
 ### Holzfäller
 
@@ -28,9 +28,9 @@ Nahkampf und Tank. Startet mit einer Axt und trägt doppelt so viel Holz für Ba
 
 | Fähigkeit | Wirkung | Ränge | Hook |
 | --- | --- | --- | --- |
-| Kräftiger Hieb | +1 Nahkampfschaden pro Rang. Ab Rang 2 fällt ein Baum mit 2 statt 3 Hieben, ab Rang 3 mit einem | 3 | `stat` |
-| Zähigkeit | +4 maximale HP pro Rang | 3 | `stat` |
-| Spalthieb (aktiv) | Trifft das Ziel und das Feld dahinter, +2 Schaden pro Rang, Abklingzeit 10 Runden | 3 | `active` |
+| Kräftiger Hieb | +1 Nahkampfschaden. Ein Baum fällt mit 2 statt 3 Hieben | 1 | `stat` |
+| Zähigkeit | +6 maximale HP | 1 | `stat` |
+| Spalthieb (aktiv) | Trifft das Ziel und das Feld dahinter, +2 Schaden, Abklingzeit 10 Runden | 1 | `active` |
 
 ### Waldläuferin
 
@@ -38,9 +38,9 @@ Fernkampf und Späherin. Startet mit einem Bogen und 10 Pfeilen, die man wieder 
 
 | Fähigkeit | Wirkung | Ränge | Hook |
 | --- | --- | --- | --- |
-| Scharfes Auge | +1 Sichtweite pro Rang. Ab Rang 3 sieht sie durch Unterholz | 3 | `stat` |
-| Leichtfüßig | +10 % Ausweichen pro Rang | 3 | `stat` |
-| Durchschuss (aktiv) | Pfeil trifft alle Gegner in einer Linie bis zum nächsten Baum, +2 Schaden pro Rang, Abklingzeit 12 Runden | 3 | `active` |
+| Scharfes Auge | +2 Sichtweite, sie sieht durch Unterholz | 1 | `stat` |
+| Leichtfüßig | +15 % Ausweichen | 1 | `stat` |
+| Durchschuss (aktiv) | Pfeil trifft alle Gegner in einer Linie bis zum nächsten Baum, +2 Schaden, Abklingzeit 12 Runden | 1 | `active` |
 
 ## Thema Eiche: Verteidigung und Holz
 
@@ -255,7 +255,7 @@ Alle Zahlen sind erste Schätzungen und müssen im Playtest geprüft werden.
 - [ ] Kaputte Tafeln festlegen: Wie häufig sind sie, wie verteilen sich 1 oder 2 Fähigkeiten, wie oft fehlt der Sockel? Kann man Tafeln reparieren?
 - [ ] Regeln für Ausgänge festlegen: Reicht ein Ausgang auf einer Seite, oder müssen beide Kanten einen haben? Wie viele Ausgänge im Schnitt, wie selten sind Tafeln mit vier?
 - [ ] Bild der Tafeln um Ausgänge ergänzen (bisher ohne)
-- [ ] Skillpunkte pro Run festlegen, Annahme bisher etwa 15 bis zum Endboss. Der Kern allein braucht schon 9, für Tafeln blieben dann nur 6. Vermutlich braucht es mehr Punkte oder weniger Ränge im Kern
+- [ ] Skillpunkte pro Run festlegen, Annahme bisher etwa 15 bis zum Endboss. Der Kern braucht 3, für Tafeln blieben dann etwa 12. Prüfen, ob das reicht, wenn Tafeln Fähigkeiten mit mehreren Rängen tragen
 - [ ] Natur-Magie im Playtest prüfen: Ist sie schwach genug, aber noch lohnend?
 - [ ] Baumwächter (aus Bernstein gestrichen) als Beschwörungs-Testlauf für Onyx oder einen späteren Stein einplanen
 - [ ] Deckel im Playtest prüfen, eventuell lockern auf Minimum plus eine Tafel
