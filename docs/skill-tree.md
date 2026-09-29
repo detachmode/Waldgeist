@@ -91,7 +91,7 @@ Ein Stein im Sockel einer Holztafel schaltet deren vierte, magische Fähigkeit f
 | Stufe | Steine | Magie | Fundort | Mindestring |
 | --- | --- | --- | --- | --- |
 | Natur | Jade, Bernstein | Wachstum, Heilung, Bewahren | mittlere Zonen | 1 |
-| Elementar | Topas | Feuer und Blitz | höhere Zonen | 2 |
+| Elementar | Topas, Saphir | Feuer und Blitz, Wasser und Eis | höhere Zonen | 2 |
 | Dunkel | Rubin, Onyx | Blut, Nekromantie | letzte Ebenen | 3 |
 | Licht | Diamant | starke Heilung, Auferstehung | letzte Ebenen | 3 |
 
@@ -101,7 +101,7 @@ Ein Stein im Sockel einer Holztafel schaltet deren vierte, magische Fähigkeit f
 - **Lernen im Run:** Die Magiefähigkeit ist lernbar, sobald ein Pfad von einer gelernten Fähigkeit der Tafel zu ihr führt (siehe **Verbindungen in der Tafel**). Magiefähigkeiten haben einen Rang.
 - **Coop:** Mindestring und Deckel greifen ineinander. Hat der schwächste Spieler weniger als 3 Tafeln, bleiben dunkle Magie und Diamanten für alle unerreichbar.
 - **Notausgang:** Ein sehr seltener Gegenstand vom Endboss zieht die Magie heraus. Der Stein wird zerstört, die Tafel wird frei.
-- **Darstellung:** Bernstein honigbraun und trüb, Topas klar zitronengelb, damit man sie auf dem Handy auseinanderhält.
+- **Darstellung:** Bernstein honigbraun und trüb, Topas klar zitronengelb, Saphir tiefblau und klar, damit man sie auf dem Handy auseinanderhält.
 
 ### Stärkestufen der Magie
 
@@ -109,8 +109,8 @@ Die erste Magie soll sich natürlich und bescheiden anfühlen. Sie ergänzt die 
 
 | Stufe | Wirkung | Grenzen |
 | --- | --- | --- |
-| Natur (Jade, Bernstein) | kleine Vorteile: etwas Heilung, kurze Verlangsamung, Komfort beim Überleben | keine Beschwörungen, keine Massenkontrolle, keine vollständige Immunität, keine Sofort-Kills. Höchstens ein einzelner Gegner wird betroffen, Effekte dauern höchstens 2 Runden, aktive Fähigkeiten haben Abklingzeit ab 20 Runden. Nur Rang 1 |
-| Elementar (Topas) | starker Schaden und Flächeneffekte | Friendly Fire ist möglich, deshalb Feuerschutz |
+| Natur (Jade, Bernstein) | kleine Vorteile: etwas Heilung, kurze Verlangsamung, Komfort beim Überleben | keine Beschwörungen mit eigener KI (nur ein kleiner, stationärer Baumwächter), keine Massenkontrolle, keine vollständige Immunität, keine Sofort-Kills. Höchstens ein einzelner Gegner wird betroffen, Zustände auf Gegnern dauern höchstens 2 Runden, aktive Fähigkeiten haben Abklingzeit ab 20 Runden. Nur Rang 1 |
+| Elementar (Topas, Saphir) | starker Schaden, Flächeneffekte und Kontrolle | Friendly Fire ist möglich, deshalb Feuerschutz bei Topas und Löschen bei Saphir |
 | Dunkel und Licht | mächtig, aber mit Preis oder selten nutzbar | nur ab Mindestring 3 |
 
 ### Jade: Wachstum und Heilung
@@ -124,9 +124,9 @@ Jade lässt kleine Dinge wachsen und heilt sacht. Nichts davon entscheidet allei
 | Keimkraft | Heilpilze und Sporenwolke heilen 25 % mehr | `on_heal` |
 | Grüner Schutz (Coop) | Verbündete im Umkreis von 2 Feldern regenerieren in Begegnungen alle 2 Runden 1 HP | `on_turn_start` |
 
-### Bernstein: Bewahren und Verlangsamen
+### Bernstein: Bewahren und Erwecken
 
-Bernstein ist versteinertes Baumharz. Es klebt, verbindet und hält Dinge frisch. Die Wirkungen sind klein und alltäglich.
+Bernstein ist versteinertes Baumharz und trägt die Erinnerung der Bäume. Es klebt, verbindet und hält Dinge frisch. Die Wirkungen sind klein und alltäglich, auch der erweckte Baum ist nur ein kleiner Helfer. Baumwächter bleiben Holz: Feuer verletzt sie.
 
 | Fähigkeit | Wirkung | Hook |
 | --- | --- | --- |
@@ -135,6 +135,7 @@ Bernstein ist versteinertes Baumharz. Es klebt, verbindet und hält Dinge frisch
 | Klebriges Harz (Coop) | Von dir getroffene Gegner sind 1 Runde verlangsamt, höchstens alle 5 Runden pro Gegner. Verbündete treffen sie mit 10 % höherer Chance | `on_attack` |
 | Harzverband (aktiv) | Heilt dich um 3 HP und beendet Gift, Abklingzeit 30 Runden | `active` |
 | Eingemachtes | Nahrung sättigt 20 % länger | `stat` |
+| Baumwächter (aktiv) | Erweckt einen Baum in Sichtweite für 4 Runden. Er bewegt sich nicht und schlägt jede Runde einen Gegner auf einem angrenzenden Feld für 2 Schaden. Abklingzeit 30 Runden | `active` |
 
 ### Topas: Feuer und Blitz
 
@@ -151,6 +152,19 @@ Topas ist der Gewitterstein. Blitz ist stark gegen nasse Gegner, Feuer gegen tro
 | Leiter (Coop) | Blitz | Deine Blitze springen auch über Verbündete weiter, ohne ihnen zu schaden, und verdoppeln so ihre Reichweite | `stat` |
 | Waldbrandherz | Feuer | Dein Feuer breitet sich doppelt so schnell aus und verletzt keine Verbündeten | `on_fire_spread` |
 
+### Saphir: Wasser und Eis
+
+Saphir ist der Regenstein. Er macht Gegner nass und langsam und beschützt die Gruppe vor Feuer. Nasse Gegner nehmen doppelten Schaden von Blitzen (siehe Topas), deshalb sind Saphir und Topas ein Paar. Saphir macht weniger Schaden als Topas und setzt auf Kontrolle.
+
+| Fähigkeit | Element | Wirkung | Hook |
+| --- | --- | --- | --- |
+| Regenguss (aktiv) | Wasser | Regen auf 3x3 Felder in Sichtweite für 5 Runden: Gegner darin sind nass, Feuer auf diesen Feldern erlischt. Abklingzeit 20 Runden | `active` |
+| Frostatem (aktiv) | Eis | Trifft bis zu 3 Felder in einer Linie: Gegner sind 3 Runden verlangsamt, nasse Gegner 4 Runden. Abklingzeit 15 Runden | `active` |
+| Eisschild (aktiv) | Eis | Ein Schild von 8 Punkten für 5 Runden. Angreifer, die ihn brechen, sind 1 Runde verlangsamt. Abklingzeit 20 Runden | `active` |
+| Kälteschock | Eis | Deine Angriffe auf nasse Gegner verlangsamen sie 1 Runde | `on_attack` |
+| Löschende Hand (Coop) | Wasser | Verbündete im Umkreis von 3 Feldern nehmen 50 % weniger Feuerschaden und löschen Brand eine Runde früher | `stat` |
+| Eiskruste (Coop) | Eis | Verlangsamte Gegner nehmen 20 % mehr Schaden von deinen Verbündeten | `on_damage` |
+
 ### Rubin: Blutmagie
 
 Dunkle Magie ist am stärksten, hat aber immer einen Preis.
@@ -163,7 +177,7 @@ Dunkle Magie ist am stärksten, hat aber immer einen Preis.
 
 ### Onyx: Nekromantie (spätere Ausbaustufe)
 
-Beschwörungen brauchen eigene KI, gehören einem Spieler und müssen synchronisiert werden. Onyx kommt deshalb erst nach dem Prototyp. Ein stationärer Baumwächter, der Gegner im Umkreis angreift, wäre ein guter Testlauf dafür, weil er ohne Wegfindung auskommt. Er war zuerst im Bernstein und wurde dort gestrichen, weil Beschwörungen für die erste Magie zu stark sind.
+Beschwörungen brauchen eigene KI, gehören einem Spieler und müssen synchronisiert werden. Onyx kommt deshalb erst nach dem Prototyp. Der stationäre Baumwächter des Bernsteins ist ein guter Testlauf dafür, weil er ohne Wegfindung auskommt.
 
 | Fähigkeit | Wirkung | Hook |
 | --- | --- | --- |
@@ -213,6 +227,7 @@ Die stärksten Momente entstehen, wenn die Fähigkeit des einen Spielers die Akt
 | Köder und Hecke | Herausforderung | Dornenhecke vor A | Gegner laufen durch die Hecke zum Tank |
 | Baumfalle | Herausforderung zieht Gegner in eine Reihe | Gezielter Fall | Der Baum trifft die ganze Reihe |
 | Baum aus dem Nichts | Schössling (Jade) | Gezielter Fall | Nach 3 Runden steht ein Baum, den B sofort auf die Gegner fällt |
+| Sturm | Regenguss (Saphir) | Kettenblitz (Topas) | Der Blitz macht doppelten Schaden gegen die nassen Gegner |
 | Brand und Verstärkung | Glut schüren (Topas) | Hitzewelle (Topas) | B setzt Gegner in Brand und macht 25 % mehr Schaden gegen sie |
 | Gift und Fessel | Giftdorn und Umschlingen | beliebige Treffer | Vergiftete Gegner werden festgewurzelt |
 | Harz und Klinge | Klebriges Harz (Bernstein) | Nahkampf | B trifft verlangsamte Gegner zuverlässiger |
@@ -257,7 +272,8 @@ Alle Zahlen sind erste Schätzungen und müssen im Playtest geprüft werden.
 - [ ] Bild der Tafeln um Ausgänge ergänzen (bisher ohne)
 - [ ] Skillpunkte pro Run festlegen, Annahme bisher etwa 15 bis zum Endboss. Der Kern braucht 3, für Tafeln blieben dann etwa 12. Prüfen, ob das reicht, wenn Tafeln Fähigkeiten mit mehreren Rängen tragen
 - [ ] Natur-Magie im Playtest prüfen: Ist sie schwach genug, aber noch lohnend?
-- [ ] Baumwächter (aus Bernstein gestrichen) als Beschwörungs-Testlauf für Onyx oder einen späteren Stein einplanen
+- [ ] Baumwächter im Bernstein prüfen: Ist er schwach genug, und taugt er als Testlauf für Onyx-Beschwörungen?
+- [ ] Saphir im Playtest prüfen, vor allem Löschende Hand gegen Friendly Fire von Topas
 - [ ] Deckel im Playtest prüfen, eventuell lockern auf Minimum plus eine Tafel
 - [ ] Drop-Raten für Tafeln und Steine pro Zone festlegen
 - [ ] Seltenheit des Notausgangs festlegen, der Steine wieder entfernt
