@@ -70,13 +70,27 @@ Moos hält die Gruppe am Leben und macht Unbekanntes lesbar.
 | Geteilte Mahlzeit (Coop) | Heilst du dich, erhält der nächste Verbündete im Umkreis von 5 Feldern 25 % pro Rang davon | 2 | `on_heal` |
 | Wiedererblühen (stark) | Einmal pro Run: Wird ein Verbündeter niedergeschlagen, während du stehst, erhebt er sich nach 3 Runden selbst mit 50 % HP | 1 | `on_ally_downed` |
 
+## Thema Dorn: Gift, Fallen und Kontrolle
+
+Dorn kontrolliert das Feld und macht Schaden über Zeit.
+
+| Fähigkeit | Wirkung | Ränge | Hook |
+| --- | --- | --- | --- |
+| Giftdorn | Angriffe vergiften: 1 Schaden pro Rang und Runde, 5 Runden lang | 3 | `on_attack` |
+| Stachelpanzer | Wer dich im Nahkampf trifft, erleidet 2 Schaden pro Rang | 2 | `on_hit_taken` |
+| Fallensteller | Du siehst versteckte Fallen im Umkreis von 3 Feldern. Rang 2: Du kannst Fallen aufnehmen und neu legen | 2 | `on_fov_update` |
+| Dornenhecke (aktiv) | Pflanzt eine Hecke, die Gegner verlangsamt und vergiftet. 2 Ladungen pro Etage, Rang 2: 4 | 2 | `active` |
+| Rankenfessel (aktiv) | Wurzelt einen Gegner in Sichtweite 3 Runden fest, Abklingzeit 20 Runden | 1 | `active` |
+| Umschlingen (Coop) | Trifft ein Verbündeter einen von dir vergifteten Gegner, wird dieser eine Runde festgewurzelt, höchstens alle 5 Runden pro Gegner | 1 | `on_damage` |
+| Dornenkrone (stark) | Gift stapelt sich unbegrenzt, ab 10 Stapeln platzt der Gegner und vergiftet alle Nachbarn | 1 | `on_status_applied` |
+
 ## Edelsteine
 
 Ein Stein im Sockel einer Holztafel schaltet deren vierte, magische Fähigkeit frei. Je tiefer die Zone, desto stärker und dunkler die Magie.
 
 | Stufe | Steine | Magie | Fundort | Mindestring |
 | --- | --- | --- | --- | --- |
-| Natur | Jade, Bernstein | Wachstum, Heilung, Bewahren, leichte Beschwörung | mittlere Zonen | 1 |
+| Natur | Jade, Bernstein | Wachstum, Heilung, Bewahren | mittlere Zonen | 1 |
 | Elementar | Topas | Feuer und Blitz | höhere Zonen | 2 |
 | Dunkel | Rubin, Onyx | Blut, Nekromantie | letzte Ebenen | 3 |
 | Licht | Diamant | starke Heilung, Auferstehung | letzte Ebenen | 3 |
@@ -89,26 +103,38 @@ Ein Stein im Sockel einer Holztafel schaltet deren vierte, magische Fähigkeit f
 - **Notausgang:** Ein sehr seltener Gegenstand vom Endboss zieht die Magie heraus. Der Stein wird zerstört, die Tafel wird frei.
 - **Darstellung:** Bernstein honigbraun und trüb, Topas klar zitronengelb, damit man sie auf dem Handy auseinanderhält.
 
+### Stärkestufen der Magie
+
+Die erste Magie soll sich natürlich und bescheiden anfühlen. Sie ergänzt die Holzfähigkeiten, statt einen Build zu tragen. Jede Stufe darf erst in tieferen Zonen mehr.
+
+| Stufe | Wirkung | Grenzen |
+| --- | --- | --- |
+| Natur (Jade, Bernstein) | kleine Vorteile: etwas Heilung, kurze Verlangsamung, Komfort beim Überleben | keine Beschwörungen, keine Massenkontrolle, keine vollständige Immunität, keine Sofort-Kills. Höchstens ein einzelner Gegner wird betroffen, Effekte dauern höchstens 2 Runden, aktive Fähigkeiten haben Abklingzeit ab 20 Runden. Nur Rang 1 |
+| Elementar (Topas) | starker Schaden und Flächeneffekte | Friendly Fire ist möglich, deshalb Feuerschutz |
+| Dunkel und Licht | mächtig, aber mit Preis oder selten nutzbar | nur ab Mindestring 3 |
+
 ### Jade: Wachstum und Heilung
 
-| Fähigkeit | Wirkung | Hook |
-| --- | --- | --- |
-| Rankenschlag (aktiv) | Wurzeln halten alle Gegner im Umkreis von 2 Feldern eine Runde fest, Abklingzeit 20 Runden | `active` |
-| Schössling (aktiv) | Lässt auf einem leeren Feld sofort einen Baum wachsen, Abklingzeit 15 Runden | `active` |
-| Keimkraft | Heilpilze und Sporenwolke heilen 50 % mehr | `on_heal` |
-| Grüner Schutz (Coop) | Verbündete im Umkreis von 2 Feldern regenerieren in Begegnungen 1 HP pro Runde | `on_turn_start` |
-
-### Bernstein: Bewahren und Erwecken
-
-Bernstein ist versteinertes Baumharz und trägt die Erinnerung der Bäume. Er schließt Gegner ein und erweckt Bäume für kurze Zeit zu stationären Wächtern. Baumwächter bleiben Holz: Feuer verletzt sie.
+Jade lässt kleine Dinge wachsen und heilt sacht. Nichts davon entscheidet allein einen Kampf.
 
 | Fähigkeit | Wirkung | Hook |
 | --- | --- | --- |
-| Harzfalle (aktiv) | Schließt einen Gegner 3 Runden in Harz ein. Er kann nicht handeln, nimmt aber auch keinen Schaden. Abklingzeit 20 Runden | `active` |
-| Harzhaut | Der erste Treffer jeder Begegnung wird vollständig abgefangen | `on_hit_taken` |
-| Klebriges Harz (Coop) | Von dir getroffene Gegner sind 2 Runden verlangsamt, Verbündete treffen sie mit 15 % höherer Chance | `on_attack` |
-| Baumwächter (aktiv) | Erweckt einen Baum in Sichtweite für 8 Runden. Er bewegt sich nicht und greift jede Runde einen Gegner im Umkreis von 2 Feldern mit 4 Schaden an. Abklingzeit 25 Runden | `active` |
-| Letzter Fall | Endet ein Baumwächter, fällt der Baum auf den nächsten Gegner und trifft die ganze Fall-Linie | `on_summon_end` |
+| Ranke (aktiv) | Eine Wurzel hält einen angrenzenden Gegner 2 Runden fest, Abklingzeit 25 Runden | `active` |
+| Schössling (aktiv) | Auf einem angrenzenden leeren Feld wächst ein Setzling, der nach 3 Runden zum Baum wird. Abklingzeit 20 Runden | `active` |
+| Keimkraft | Heilpilze und Sporenwolke heilen 25 % mehr | `on_heal` |
+| Grüner Schutz (Coop) | Verbündete im Umkreis von 2 Feldern regenerieren in Begegnungen alle 2 Runden 1 HP | `on_turn_start` |
+
+### Bernstein: Bewahren und Verlangsamen
+
+Bernstein ist versteinertes Baumharz. Es klebt, verbindet und hält Dinge frisch. Die Wirkungen sind klein und alltäglich.
+
+| Fähigkeit | Wirkung | Hook |
+| --- | --- | --- |
+| Harzpfütze (aktiv) | Ein Feld in Sichtweite wird klebrig: Wer hineintritt, ist 2 Runden verlangsamt. Die Pfütze hält 10 Runden, Abklingzeit 25 Runden | `active` |
+| Harzhaut | Der erste Treffer jeder Begegnung macht 25 % weniger Schaden | `on_hit_taken` |
+| Klebriges Harz (Coop) | Von dir getroffene Gegner sind 1 Runde verlangsamt, höchstens alle 5 Runden pro Gegner. Verbündete treffen sie mit 10 % höherer Chance | `on_attack` |
+| Harzverband (aktiv) | Heilt dich um 3 HP und beendet Gift, Abklingzeit 30 Runden | `active` |
+| Eingemachtes | Nahrung sättigt 20 % länger | `stat` |
 
 ### Topas: Feuer und Blitz
 
@@ -137,7 +163,7 @@ Dunkle Magie ist am stärksten, hat aber immer einen Preis.
 
 ### Onyx: Nekromantie (spätere Ausbaustufe)
 
-Beschwörungen brauchen eigene KI, gehören einem Spieler und müssen synchronisiert werden. Onyx kommt deshalb erst nach dem Prototyp. Die stationären Baumwächter des Bernsteins sind ein guter Testlauf dafür, weil sie ohne Wegfindung auskommen.
+Beschwörungen brauchen eigene KI, gehören einem Spieler und müssen synchronisiert werden. Onyx kommt deshalb erst nach dem Prototyp. Ein stationärer Baumwächter, der Gegner im Umkreis angreift, wäre ein guter Testlauf dafür, weil er ohne Wegfindung auskommt. Er war zuerst im Bernstein und wurde dort gestrichen, weil Beschwörungen für die erste Magie zu stark sind.
 
 | Fähigkeit | Wirkung | Hook |
 | --- | --- | --- |
@@ -147,7 +173,7 @@ Beschwörungen brauchen eigene KI, gehören einem Spieler und müssen synchronis
 
 ### Diamant: Licht und Auferstehung
 
-Der Diamant ist das Gegenstück zur dunklen Magie: Er kostet nichts, ist dafür aber selten nutzbar, mit langen Abklingzeiten oder nur einmal pro Etage oder Run. Stärker als Wiederblühen aus dem Moos, weil er sofort wirkt.
+Der Diamant ist das Gegenstück zur dunklen Magie: Er kostet nichts, ist dafür aber selten nutzbar, mit langen Abklingzeiten oder nur einmal pro Etage oder Run. Stärker als Wiedererblühen aus dem Moos, weil er sofort wirkt.
 
 | Fähigkeit | Wirkung | Hook |
 | --- | --- | --- |
@@ -156,20 +182,6 @@ Der Diamant ist das Gegenstück zur dunklen Magie: Er kostet nichts, ist dafür 
 | Reinigung (aktiv) | Entfernt Gift, Brand und Verlangsamung von dir und Verbündeten im Umkreis von 3 Feldern und macht 2 Runden immun dagegen, Abklingzeit 20 Runden | `active` |
 | Diamanthaut (Coop) | Fällt ein Verbündeter im Umkreis von 5 Feldern unter 25 % HP, erhält er einmal pro Begegnung einen Schild von 15 | `on_ally_hit` |
 | Wiedergeburt | Einmal pro Run: Würdest du als letzter stehender Spieler niedergeschlagen, stehst du mit 50 % HP auf, alle Verbündeten mit 25 % | `on_lethal_damage` |
-
-## Thema Dorn: Gift, Fallen und Kontrolle
-
-Dorn kontrolliert das Feld und macht Schaden über Zeit.
-
-| Fähigkeit | Wirkung | Ränge | Hook |
-| --- | --- | --- | --- |
-| Giftdorn | Angriffe vergiften: 1 Schaden pro Rang und Runde, 5 Runden lang | 3 | `on_attack` |
-| Stachelpanzer | Wer dich im Nahkampf trifft, erleidet 2 Schaden pro Rang | 2 | `on_hit_taken` |
-| Fallensteller | Du siehst versteckte Fallen im Umkreis von 3 Feldern. Rang 2: Du kannst Fallen aufnehmen und neu legen | 2 | `on_fov_update` |
-| Dornenhecke (aktiv) | Pflanzt eine Hecke, die Gegner verlangsamt und vergiftet. 2 Ladungen pro Etage, Rang 2: 4 | 2 | `active` |
-| Rankenfessel (aktiv) | Wurzelt einen Gegner in Sichtweite 3 Runden fest, Abklingzeit 20 Runden | 1 | `active` |
-| Umschlingen (Coop) | Trifft ein Verbündeter einen von dir vergifteten Gegner, wird dieser eine Runde festgewurzelt, höchstens alle 5 Runden pro Gegner | 1 | `on_damage` |
-| Dornenkrone (stark) | Gift stapelt sich unbegrenzt, ab 10 Stapeln platzt der Gegner und vergiftet alle Nachbarn | 1 | `on_status_applied` |
 
 ## Würfelregeln
 
@@ -200,8 +212,7 @@ Die stärksten Momente entstehen, wenn die Fähigkeit des einen Spielers die Akt
 | --- | --- | --- | --- |
 | Köder und Hecke | Herausforderung | Dornenhecke vor A | Gegner laufen durch die Hecke zum Tank |
 | Baumfalle | Herausforderung zieht Gegner in eine Reihe | Gezielter Fall | Der Baum trifft die ganze Reihe |
-| Baum aus dem Nichts | Schössling (Jade) | Gezielter Fall | Ein frisch gewachsener Baum wird sofort auf die Gegner gefällt |
-| Wächter aus dem Nichts | Schössling (Jade) | Baumwächter (Bernstein) | Ein frisch gewachsener Baum wird mitten im Kampf zum Wächter |
+| Baum aus dem Nichts | Schössling (Jade) | Gezielter Fall | Nach 3 Runden steht ein Baum, den B sofort auf die Gegner fällt |
 | Brand und Verstärkung | Glut schüren (Topas) | Hitzewelle (Topas) | B setzt Gegner in Brand und macht 25 % mehr Schaden gegen sie |
 | Gift und Fessel | Giftdorn und Umschlingen | beliebige Treffer | Vergiftete Gegner werden festgewurzelt |
 | Harz und Klinge | Klebriges Harz (Bernstein) | Nahkampf | B trifft verlangsamte Gegner zuverlässiger |
@@ -212,12 +223,12 @@ Viele starke Kombos brauchen Steine bei beiden Spielern. Das macht es lohnend, s
 
 ## Effektsystem
 
-Der Pool braucht 20 Hooks. Die Coop-Fähigkeiten hängen an globalen Hooks, die auf Ereignisse aller Akteure reagieren, deshalb braucht das Effektsystem von Anfang an einen zentralen Ereignisbus.
+Der Pool braucht 19 Hooks. Die Coop-Fähigkeiten hängen an globalen Hooks, die auf Ereignisse aller Akteure reagieren, deshalb braucht das Effektsystem von Anfang an einen zentralen Ereignisbus.
 
 | Hook | Auslöser | Reichweite | Beispiele |
 | --- | --- | --- | --- |
 | `stat` | kein Ereignis, dauerhafter Modifikator | eigener Charakter | Rindenhaut, Zähigkeit, Aderlass |
-| `active` | Spieler löst die Fähigkeit aus | eigener Charakter | Spalthieb, Baumwächter, Auferstehung |
+| `active` | Spieler löst die Fähigkeit aus | eigener Charakter | Spalthieb, Harzverband, Auferstehung |
 | `on_attack` | eigener Angriff | eigener Charakter | Giftdorn, Klebriges Harz, Gewitterzeichen |
 | `on_hit_taken` | eigener Charakter wird getroffen | eigener Charakter | Stachelpanzer, Harzhaut |
 | `on_kill` | Gegner stirbt in der Nähe | eigener Charakter | Seelenernte |
@@ -225,7 +236,6 @@ Der Pool braucht 20 Hooks. Die Coop-Fähigkeiten hängen an globalen Hooks, die 
 | `on_tick` | globaler Tick außerhalb von Begegnungen | eigener Charakter | Moosbett |
 | `on_turn_start` | neue Runde in einer Begegnung | eigener Charakter | Grüner Schutz |
 | `on_tree_felled` | eigener Charakter fällt einen Baum | eigener Charakter | Gezielter Fall, Brandschneise |
-| `on_summon_end` | eigene Beschwörung endet | eigener Charakter | Letzter Fall |
 | `on_item_pickup` | eigener Charakter hebt etwas auf | eigener Charakter | Pilzkunde |
 | `on_fov_update` | Sichtfeld wird neu berechnet | eigener Charakter | Baumflüsterer, Fallensteller |
 | `on_heal` | eigener Charakter wird geheilt | eigener Charakter | Geteilte Mahlzeit, Keimkraft |
@@ -234,7 +244,7 @@ Der Pool braucht 20 Hooks. Die Coop-Fähigkeiten hängen an globalen Hooks, die 
 | `on_fire_spread` | Feuer breitet sich aus | Welt | Waldbrandherz |
 | `on_damage` | beliebiger Akteur macht Schaden | alle Akteure | Glut schüren, Umschlingen, Blutdurst |
 | `on_ally_hit` | Verbündeter wird getroffen | alle Akteure | Schützender Ast, Diamanthaut |
-| `on_ally_downed` | Verbündeter wird niedergeschlagen | alle Akteure | Wiederblühen |
+| `on_ally_downed` | Verbündeter wird niedergeschlagen | alle Akteure | Wiedererblühen |
 | `on_revive` | Wiederbelebung beginnt | alle Akteure | Heilende Hände |
 
 ## Offene Punkte
@@ -245,7 +255,9 @@ Alle Zahlen sind erste Schätzungen und müssen im Playtest geprüft werden.
 - [ ] Kaputte Tafeln festlegen: Wie häufig sind sie, wie verteilen sich 1 oder 2 Fähigkeiten, wie oft fehlt der Sockel? Kann man Tafeln reparieren?
 - [ ] Regeln für Ausgänge festlegen: Reicht ein Ausgang auf einer Seite, oder müssen beide Kanten einen haben? Wie viele Ausgänge im Schnitt, wie selten sind Tafeln mit vier?
 - [ ] Bild der Tafeln um Ausgänge ergänzen (bisher ohne)
-- [ ] Skillpunkte pro Run festlegen, Annahme bisher etwa 15 bis zum Endboss
+- [ ] Skillpunkte pro Run festlegen, Annahme bisher etwa 15 bis zum Endboss. Der Kern allein braucht schon 9, für Tafeln blieben dann nur 6. Vermutlich braucht es mehr Punkte oder weniger Ränge im Kern
+- [ ] Natur-Magie im Playtest prüfen: Ist sie schwach genug, aber noch lohnend?
+- [ ] Baumwächter (aus Bernstein gestrichen) als Beschwörungs-Testlauf für Onyx oder einen späteren Stein einplanen
 - [ ] Deckel im Playtest prüfen, eventuell lockern auf Minimum plus eine Tafel
 - [ ] Drop-Raten für Tafeln und Steine pro Zone festlegen
 - [ ] Seltenheit des Notausgangs festlegen, der Steine wieder entfernt
