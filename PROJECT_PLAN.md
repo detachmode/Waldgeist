@@ -15,20 +15,49 @@ Dieser Plan führt vom Game-Design im [README](README.md) zu einem spielbaren Co
 - Monetarisierung, Ranglisten, Accounts mit Cloud-Speicher
 - Weitere Klassen über Holzfäller und Waldläuferin hinaus
 
-## Grundsatzentscheidungen (Meilenstein 0)
+## Engine: Godot 4 (entschieden)
 
-Diese Punkte müssen vor dem ersten Code entschieden werden. Die Empfehlung ist ein Vorschlag, keine Festlegung.
+Waldgeist wird mit **Godot 4** umgesetzt. Daraus ergeben sich folgende technische Festlegungen:
+
+| Bereich | Festlegung | Begründung |
+| --- | --- | --- |
+| Version | Aktuelle stabile Godot-4.x-Version, im Repo festgehalten (`project.godot`, CI-Image) | Alle Beteiligten und die CI bauen mit derselben Version |
+| Sprache | GDScript mit statischen Typen | Beste Unterstützung beim Export für Android und iOS; C# ist auf Mobilgeräten weniger ausgereift |
+| Karte | `TileMapLayer` mit 16×16-Kacheln | Eingebautes Rendering, Kollision und Navigation für Rasterkarten |
+| Spiellogik | Reine GDScript-Klassen (`RefCounted`) ohne Abhängigkeit von Nodes | Simulation lässt sich ohne Szene testen und im Coop zwischen Host und Client synchronisieren |
+| Fähigkeiten und Gegner | Eigene `Resource`-Typen (`.tres`), Hook-Logik als kleine Skripte | Werte im Editor pflegbar, Balancing ohne Codeänderung |
+| Ereignisbus | Autoload-Singleton mit Signalen für alle 20 Hooks | Globale Coop-Hooks erreichen jeden Akteur |
+| Coop im LAN | `ENetMultiplayerPeer` und `@rpc`-Aufrufe, Host-autoritativ | Im High-Level-Multiplayer von Godot enthalten |
+| Coop im Internet | `WebSocketMultiplayerPeer` über einen kleinen Relay-Server, alternativ `WebRTCMultiplayerPeer` mit Signalisierung | Umgeht NAT-Probleme zwischen Handys |
+| Speicherstand | `ConfigFile` oder JSON in `user://`, mit Versionsnummer | Plattformunabhängig, migrierbar |
+| Tests | GUT oder gdUnit4, headless in der CI | Hooks und Fähigkeiten automatisiert prüfen |
+| CI | GitHub Actions mit Godot-Headless-Image, Export-Vorlagen für Android | APK bei jedem Push |
+| Touch-Eingabe | `InputEventScreenTouch` und `InputEventScreenDrag`, Anzeige skaliert per `stretch_mode = canvas_items` | Einheitlich auf verschiedenen Bildschirmgrößen |
+
+### Weitere Grundsatzentscheidungen (Meilenstein 0)
 
 | Entscheidung | Optionen | Empfehlung | Begründung |
 | --- | --- | --- | --- |
-| Engine | Godot 4, libGDX (wie Shattered Pixel Dungeon), Unity | Godot 4 | Kostenlos, gute Mobile-Exporte, eingebautes High-Level-Multiplayer, schlanke 2D-Pipeline |
 | Coop-Modell | Host-autoritativ, Lockstep, dedizierter Server | Host-autoritativ (ein Handy ist Host) | Rundenbasiert und nur 2 Spieler: wenig Bandbreite, keine Serverkosten, Zufall liegt nur beim Host |
 | Verbindung | LAN/WLAN, Relay-Server, Bluetooth | Erst LAN, dann Relay für Internet-Partien | LAN reicht zum Testen, Relay löst NAT-Probleme für 1.0 |
 | Rundensystem | Strikt abwechselnd, simultane Züge, Zeitbudget | Simultane Planung, gemeinsame Auflösung pro Runde | Kein Warten auf den Partner, passt zu „Laufen kostet kaum Nahrung“ |
-| Datenformat für Fähigkeiten | Code pro Fähigkeit, datengetrieben (JSON/Resources) | Datengetrieben mit Hook-Skripten | Der Pool wächst laut offenen Punkten auf 10–12 pro Thema |
 | Grafikstil | Pixel-Art 16×16, 32×32 | 16×16 wie SPD | Schnell zu produzieren, gut lesbar auf dem Handy |
 
-**Ergebnis M0:** Entscheidungsdokument, Repository-Struktur, CI-Build für Android, leeres Projekt läuft auf einem Testgerät.
+### Projektstruktur
+
+```
+waldgeist/
+├── project.godot
+├── autoload/        # EventBus, GameState, Net
+├── core/            # reine Spiellogik: Karte, Akteure, Runden, Effekte
+├── data/            # .tres-Ressourcen: Fähigkeiten, Tafeln, Steine, Gegner
+├── scenes/          # Spielfeld, HUD, Charakterbildschirm, Lobby
+├── net/             # Host- und Client-Logik, Nachrichtenformat
+├── assets/          # Sprites, Kacheln, Audio, Schriften
+└── tests/           # GUT- bzw. gdUnit4-Tests
+```
+
+**Ergebnis M0:** Godot-Projekt mit obiger Struktur, EventBus-Autoload, Test-Framework eingerichtet, CI baut ein Android-APK, das leere Projekt läuft auf einem Testgerät.
 
 ## Meilensteine
 
@@ -52,7 +81,7 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 
 - Zentraler Ereignisbus mit allen 20 Hooks aus dem README (von Anfang an global, wegen Coop-Hooks)
 - Stat-Modifikatoren, aktive Fähigkeiten mit Abklingzeit, Zustände (Gift, Brand, Verlangsamung, Festwurzeln, Schild)
-- Fähigkeiten als Daten definiert, Hook-Logik als kleine Skripte
+- Fähigkeiten als `Resource`-Dateien definiert, Hook-Logik als kleine GDScript-Skripte
 - Klassensteine Holzfäller und Waldläuferin mit je 3 Fähigkeiten à 3 Rängen
 - Erfahrung, Level-Up, 1 Skillpunkt pro Level, Lernen nur außerhalb von Begegnungen
 - 3 Schnelltasten für aktive Fähigkeiten
@@ -62,9 +91,9 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 
 ### M3 – Coop (ca. 5–7 Wochen, größtes Risiko)
 
-- Spielzustand vom Rendering trennen (Voraussetzung für Synchronisierung)
+- Spielzustand (`core/`) strikt von Nodes und Rendering trennen (Voraussetzung für Synchronisierung)
 - Host-autoritative Simulation: Clients senden Absichten, Host löst auf und verteilt Ergebnisse
-- Lobby über LAN, Beitreten per Code oder QR
+- Lobby über LAN mit `ENetMultiplayerPeer`, Beitreten per Code oder QR
 - Geteilte Erfahrung, gleichzeitiges Level-Up
 - Niederschlagen und Wiederbeleben statt sofortigem Tod
 - Coop-Hooks aktiv: `on_damage`, `on_ally_hit`, `on_ally_downed`, `on_revive`
@@ -116,7 +145,7 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 
 ### M8 – Release-Vorbereitung (ca. 6–8 Wochen)
 
-- Internet-Coop über Relay-Server, Einladungslinks
+- Internet-Coop über Relay-Server (`WebSocketMultiplayerPeer` oder WebRTC), Einladungslinks
 - Tutorial und erste Etage als geführter Einstieg
 - Audio, Effekte, Barrierefreiheit (Schriftgröße, Farbunterscheidung der Steine)
 - Leistungstests auf schwachen Geräten, Akkuverbrauch
@@ -129,7 +158,7 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 
 | Meilenstein | Dauer | Kumuliert |
 | --- | --- | --- |
-| M0 Entscheidungen | 1–2 Wochen | ~2 Wochen |
+| M0 Godot-Setup und Entscheidungen | 1–2 Wochen | ~2 Wochen |
 | M1 Solo-Kern | 4–6 Wochen | ~8 Wochen |
 | M2 Effektsystem | 3–4 Wochen | ~12 Wochen |
 | M3 Coop | 5–7 Wochen | ~19 Wochen |
@@ -168,6 +197,6 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 
 - Jeder Meilenstein bekommt ein GitHub-Milestone mit Issues pro Aufgabe.
 - Hauptzweig bleibt jederzeit baubar; Arbeit in Feature-Branches mit Pull Requests.
-- CI baut bei jedem Push Android-APK und führt Tests aus.
+- CI baut bei jedem Push mit Godot headless ein Android-APK und führt die Tests aus.
 - Nach jedem Meilenstein: kurzer Playtest, Rückblick, Plan anpassen.
 - Alle Balancing-Zahlen stehen in Datendateien, nicht im Code.
