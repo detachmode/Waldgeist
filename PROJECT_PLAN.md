@@ -1,16 +1,16 @@
 # Waldgeist – Projektplan
 
-Dieser Plan führt vom Game-Design im [README](README.md) zu einem spielbaren Coop-Prototyp auf dem Handy und danach zur ersten veröffentlichbaren Version. Er ist in Meilensteine gegliedert, die jeweils mit etwas Spielbarem enden. Zeitangaben sind grobe Schätzungen für ein kleines Team (1–2 Personen, Teilzeit) und werden nach jedem Meilenstein neu bewertet.
+Dieser Plan führt vom Game-Design im [README](README.md) und in der [Skill-Doku](docs/skill-tree.md) zu einem spielbaren Coop-Prototyp auf dem Handy und danach zur ersten veröffentlichbaren Version. Er ist in Meilensteine gegliedert, die jeweils mit etwas Spielbarem enden. Zeitangaben sind grobe Schätzungen für ein kleines Team (1–2 Personen, Teilzeit) und werden nach jedem Meilenstein neu bewertet.
 
 ## Ziele
 
 1. **Prototyp:** Zwei Spieler laufen gemeinsam durch die ersten zwei Waldzonen, kämpfen rundenbasiert, fällen Bäume, bauen Barrikaden und lernen Fähigkeiten aus einem festen Skillbaum.
 2. **Vertical Slice:** Das Tafel-Skillsystem als Meta-Progression funktioniert über mehrere Runs, inklusive Sockeln von Jade und Bernstein.
-3. **Version 1.0:** Alle vier Magiestufen, fünf Zonen mit Endboss, beide Startklassen, drei Holzthemen, stabile Online-Coop-Partien auf Android und iOS.
+3. **Version 1.0:** Alle vier Magiestufen, fünf Zonen mit Endboss, beide Startklassen, vier Holzthemen (Eiche, Moos, Dorn, Lagerfeuer), zwei Schwierigkeitsgrade, stabile Online-Coop-Partien auf Android und iOS.
 
 ## Nicht-Ziele für 1.0
 
-- Onyx und Beschwörungen mit Wegfindung (laut README bewusst nach dem Prototyp)
+- Onyx und Beschwörungen mit Wegfindung (laut Skill-Doku bewusst nach dem Prototyp)
 - Mehr als zwei Spieler
 - Monetarisierung, Ranglisten, Accounts mit Cloud-Speicher
 - Weitere Klassen über Holzfäller und Waldläuferin hinaus
@@ -26,7 +26,7 @@ Waldgeist wird mit **Godot 4** umgesetzt. Daraus ergeben sich folgende technisch
 | Karte | `TileMapLayer` mit 16×16-Kacheln | Eingebautes Rendering, Kollision und Navigation für Rasterkarten |
 | Spiellogik | Reine GDScript-Klassen (`RefCounted`) ohne Abhängigkeit von Nodes | Simulation lässt sich ohne Szene testen und im Coop zwischen Host und Client synchronisieren |
 | Fähigkeiten und Gegner | Eigene `Resource`-Typen (`.tres`), Hook-Logik als kleine Skripte | Werte im Editor pflegbar, Balancing ohne Codeänderung |
-| Ereignisbus | Autoload-Singleton mit Signalen für alle 20 Hooks | Globale Coop-Hooks erreichen jeden Akteur |
+| Ereignisbus | Autoload-Singleton mit Signalen für alle 19 Hooks | Globale Coop-Hooks erreichen jeden Akteur |
 | Coop im LAN | `ENetMultiplayerPeer` und `@rpc`-Aufrufe, Host-autoritativ | Im High-Level-Multiplayer von Godot enthalten |
 | Coop im Internet | `WebSocketMultiplayerPeer` über einen kleinen Relay-Server, alternativ `WebRTCMultiplayerPeer` mit Signalisierung | Umgeht NAT-Probleme zwischen Handys |
 | Speicherstand | `ConfigFile` oder JSON in `user://`, mit Versionsnummer | Plattformunabhängig, migrierbar |
@@ -72,6 +72,8 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 - Nahrungssystem: Aktionen kosten Nahrung, Laufen nicht; Hunger zieht HP ab
 - Bäume fällen (3 Hiebe), Fall-Linie mit Schaden, Holz sammeln
 - Barrikaden und kleine Türme bauen (Sichtweite +)
+- Tiere jagen und am Lagerfeuer Essen kochen
+- Hütten im Wald, die man betreten kann (Beute oder Gegner)
 - Erste Gegner der Zone 1: Banditen, 2–3 Tiere, Fallen
 - Touch-Steuerung: Tippen zum Laufen, Wischen/Halten für Aktionen
 
@@ -79,10 +81,10 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 
 ### M2 – Effektsystem und Startklassen (ca. 3–4 Wochen)
 
-- Zentraler Ereignisbus mit allen 20 Hooks aus dem README (von Anfang an global, wegen Coop-Hooks)
+- Zentraler Ereignisbus mit allen 19 Hooks aus der Skill-Doku (von Anfang an global, wegen Coop-Hooks)
 - Stat-Modifikatoren, aktive Fähigkeiten mit Abklingzeit, Zustände (Gift, Brand, Verlangsamung, Festwurzeln, Schild)
 - Fähigkeiten als `Resource`-Dateien definiert, Hook-Logik als kleine GDScript-Skripte
-- Klassensteine Holzfäller und Waldläuferin mit je 3 Fähigkeiten à 3 Rängen
+- Klassensteine Holzfäller und Waldläuferin mit je 3 Fähigkeiten à 1 Rang
 - Erfahrung, Level-Up, 1 Skillpunkt pro Level, Lernen nur außerhalb von Begegnungen
 - 3 Schnelltasten für aktive Fähigkeiten
 - Unit-Tests für jeden Hook und jede Fähigkeit des Kerns
@@ -106,9 +108,10 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 ### M4 – Prototyp-Zone 2 und Holzthemen (ca. 4–5 Wochen)
 
 - Zone 2 mit erster Naturmagie bei Gegnern
-- Themen Eiche, Moos, Dorn mit allen im README beschriebenen Fähigkeiten
+- Themen Eiche, Moos, Dorn mit allen in der Skill-Doku beschriebenen Fähigkeiten
+- Lagerfeuer-Thema, sobald sein Fähigkeitenpool festgelegt ist
 - Fester Test-Skillbaum (ohne Tafeln), um die Fähigkeiten zu balancieren
-- Coop-Kombos aus dem README gezielt testen (Köder und Hecke, Baumfalle, Gift und Fessel)
+- Coop-Kombos aus der Skill-Doku gezielt testen (Köder und Hecke, Baumfalle, Gift und Fessel)
 
 **Abnahme = Prototyp:** Interner Playtest mit mindestens 5 Paaren, Feedbackbogen ausgewertet.
 
@@ -118,7 +121,8 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 - Tafel-Würfelregeln: 3 aus 6 Fähigkeiten, höchstens eine aktive, starke Fähigkeit ab Zone 3
 - Verwitterte Tafeln im Run, Auflösung am Run-Ende
 - Charakterbildschirm: Hex-Raster um den Klassenstein, Ringe, Drag-and-drop, Platzierungsregeln
-- Erreichbarkeit im Run (Nachbarschaft zu gelernten Tafeln)
+- Erreichbarkeit im Run: Ausgänge und Verbindungen zwischen Tafeln, Pfade innerhalb einer Tafel
+- Kaputte Tafeln (weniger Fähigkeiten oder fehlender Sockel)
 - Coop-Deckel: Ausschnitt-Auswahl für stärkere Spieler, zusammenhängend am Kern
 - Duplikat-Regeln (Rang +1, alternativer Zugang, Abklingzeit −30 %)
 - Abgleich der Skillbäume beider Spieler in der Lobby
@@ -130,7 +134,8 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 - Sockeln mit Bestätigung, Bindung, Leuchtfarbe
 - Jade und Bernstein mit allen Fähigkeiten
 - Baumwächter als stationäre Beschwörung (Testlauf für spätere Onyx-KI)
-- Lernbedingung: 2 von 3 Holzfähigkeiten der Tafel
+- Lernbedingung: ein Pfad von einer gelernten Fähigkeit der Tafel zur Magiefähigkeit
+- Grenzen der Natur-Magie einhalten (Rang 1, ein Ziel, Zustände höchstens 2 Runden)
 - Mindestring-Regeln
 
 **Abnahme = Vertical Slice:** Externer Playtest (geschlossene Beta) auf Android.
@@ -138,6 +143,7 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 ### M7 – Elementar, Licht und Dunkel, Zonen 3–5 (ca. 8–10 Wochen)
 
 - Topas: Feuer- und Blitzsystem, Nässe, Waldbrand-Ausbreitung, halbe Feuerfestigkeit
+- Saphir: Wasser und Eis, Nässe als Verstärker für Topas-Blitze, Löschen gegen Friendly Fire
 - Rubin und Diamant
 - Zonen 3–5 mit eigenen Gegnern und Umgebungen
 - Endboss inklusive seltenem Notausgang-Gegenstand
@@ -147,6 +153,7 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 
 - Internet-Coop über Relay-Server (`WebSocketMultiplayerPeer` oder WebRTC), Einladungslinks
 - Tutorial und erste Etage als geführter Einstieg
+- Zwei Schwierigkeitsgrade, vor dem Run wählbar
 - Audio, Effekte, Barrierefreiheit (Schriftgröße, Farbunterscheidung der Steine)
 - Leistungstests auf schwachen Geräten, Akkuverbrauch
 - iOS-Build, Store-Einträge, Datenschutzerklärung
@@ -177,17 +184,22 @@ Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk
 | Tafelsystem zu komplex auf kleinem Bildschirm | Spieler verstehen Meta-Progression nicht | Papierprototyp und UI-Mockups vor M5, Tutorial-Tafel |
 | Balancing bei ~50 Fähigkeiten | Dominante Builds, tote Fähigkeiten | Datengetriebene Werte, Playtest-Telemetrie, Balancing-Tabellen |
 | Waldbrand-Simulation zu teuer | Ruckeln auf alten Handys | Zellbasierte Ausbreitung pro Runde, Obergrenze aktiver Brandfelder |
-| Umfang wächst (Onyx, weitere Klassen, 4. Thema) | Release verschiebt sich | Nicht-Ziele einhalten, Ideen in Backlog nach 1.0 |
+| Umfang wächst (Onyx, weitere Klassen, Jagd als 5. Thema) | Release verschiebt sich | Nicht-Ziele einhalten, Ideen in Backlog nach 1.0 |
 
 ## Offene Designpunkte und wann sie entschieden werden
 
-| Offener Punkt (aus README) | Entscheiden in |
+| Offener Punkt (aus der Skill-Doku) | Entscheiden in |
 | --- | --- |
 | Skillpunkte pro Run (~15) | M4-Playtest |
 | Deckel lockern auf Minimum + 1 | M5-Playtest |
 | Drop-Raten für Tafeln und Steine | M5 (Tafeln), M6/M7 (Steine) |
 | Seltenheit des Notausgangs | M7 |
-| Viertes Holzthema (Jagd) | nach 1.0 oder M7, falls Zeit bleibt |
+| Fähigkeitenpool für Lagerfeuer | vor M4 |
+| Einstieg, Ausgänge und kaputte Tafeln | vor M5 (Papierprototyp) |
+| Tafelbilder pro Thema (leer und gesockelt) | parallel zu M5 |
+| Natur-Magie und Baumwächter schwach genug? | M6-Playtest |
+| Saphir gegen Friendly Fire von Topas | M7-Playtest |
+| Jagd als fünftes Thema | nach 1.0 oder M7, falls Zeit bleibt |
 | Gestrichene Glut-Fähigkeiten zurückholen | M7 beim Topas-Balancing |
 | Onyx | nach 1.0 |
 | Pool auf 10–12 pro Thema ausbauen | fortlaufend ab M5 |
