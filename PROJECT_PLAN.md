@@ -4,6 +4,8 @@
 
 Wir bauen zuerst nur eines: **zwei Spieler gehen auf zwei Handys gemeinsam durch den Wald, und das macht Spaß.**
 
+Der allererste Schritt ist ein Technik-Test: Zwei Handys, ein iPhone und ein Android, verbinden sich im Browser und spielen zusammen.
+
 Alles andere kommt später. Das Tafel-Skillsystem, die Edelsteine, die tieferen Zonen und die Veröffentlichung im Store warten, bis dieser Kern funktioniert.
 
 Das Spieldesign steht im [README](README.md) und in der [Skill-Doku](docs/skill-tree.md).
@@ -39,15 +41,17 @@ Das Spiel wird mit der Engine **Godot 4** gebaut.
 
 | Thema | Entscheidung | In einfachen Worten |
 | --- | --- | --- |
-| Programmiersprache | GDScript mit Typangaben | Die Standardsprache von Godot. Läuft problemlos auf Android und iOS |
+| Plattform | **Browser-Spiel** (Web-Export von Godot) | Beide Handys öffnen einfach einen Link, egal ob iPhone oder Android. Keine Installation, kein Mac und kein Apple-Konto nötig. Man kann das Spiel zum Home-Bildschirm hinzufügen, dann läuft es im Vollbild. Native Apps kommen erst bei der Veröffentlichung |
+| Programmiersprache | GDScript mit Typangaben | Die Standardsprache von Godot. Läuft im Browser, auf Android und auf iOS |
 | Coop-Verbindung | Ein Handy ist der **Host** | Nur der Host berechnet das Spiel. Das zweite Handy schickt nur, was sein Spieler tun will, und zeigt das Ergebnis an. So können die beiden Spielstände nie voneinander abweichen |
-| Verbindungsart | Erst WLAN, Internet später | Im selben WLAN ist es am einfachsten. Spielen über das Internet kommt nach dem Prototyp |
+| Verbindungsart | Über einen **Weiterleitungsserver** (`WebSocketMultiplayerPeer`) | Beide Handys verbinden sich mit einem kleinen Server im Internet, der ihre Nachrichten weiterreicht. Er rechnet nichts vom Spiel, das macht weiterhin der Host. Funktioniert im WLAN und im Mobilfunknetz. Der Host erstellt ein Spiel und bekommt einen Code, der Partner gibt den Code ein |
 | Züge | Beide wählen gleichzeitig | In einer Runde wählen beide Spieler ihren Zug, dann passiert alles zusammen. Niemand muss auf den anderen warten. Außerhalb von Kämpfen läuft man frei herum |
 | Spiellogik getrennt von der Grafik | Eigener Ordner `core/` | Die Regeln des Spiels wissen nichts von Bildern oder Animationen. Dadurch lassen sie sich leicht testen und über das Netzwerk abgleichen |
 | Karte | Raster aus Kacheln mit 16×16 Pixeln | Pixel-Art wie in Shattered Pixel Dungeon |
 | Spielwerte | In Datendateien (`.tres`) | Schaden, Lebenspunkte usw. lassen sich ändern, ohne Code anzufassen |
 | Tests | GUT oder gdUnit4 | Automatische Tests prüfen, ob die Spielregeln stimmen |
-| Automatischer Build | GitHub Actions | Bei jedem Push entsteht automatisch eine installierbare Android-App (APK) |
+| Automatischer Build | GitHub Actions | Bei jedem Push wird die Web-Version gebaut und automatisch online gestellt. Danach reicht es, die Seite auf dem Handy neu zu laden |
+| Hosting | Kostenloser Anbieter, z. B. Cloudflare, Fly.io, itch.io | Hier liegen das Spiel und der Weiterleitungsserver. Wird in M0 festgelegt |
 
 ### Ordnerstruktur
 
@@ -58,6 +62,7 @@ waldgeist/
 ├── data/       Spielwerte: Gegner, Fähigkeiten
 ├── scenes/     Bildschirme: Spielfeld, Anzeige, Lobby
 ├── net/        Verbindung zwischen Host und zweitem Handy
+├── server/     Kleiner Weiterleitungsserver
 ├── assets/     Grafiken und Sounds
 └── tests/      Automatische Tests
 ```
@@ -68,18 +73,29 @@ Coop ist von Anfang an dabei. Wir bauen nicht erst ein Einzelspieler-Spiel und f
 
 Die Zeiten sind grobe Schätzungen.
 
-### M0 – Grundgerüst (1 Woche)
+### M0 – Technik-Test (1–2 Wochen)
+
+Hier geht es noch nicht um Spielspaß, sondern nur darum, ob die Technik funktioniert. Das ist das erste und wichtigste Zwischenziel.
+
+**Ziel:** Ich spiele mit meiner Partnerin, sie auf dem iPhone, ich auf Android, gemeinsam im Browser.
 
 - Godot-Projekt mit der Ordnerstruktur anlegen
-- Automatischen Build einrichten
-- Zwei Handys verbinden sich im WLAN
+- Web-Export einrichten und im iPhone-Safari und Android-Chrome prüfen
+- Weiterleitungsserver schreiben und online stellen
+- Lobby: „Spiel erstellen“ zeigt einen Code, „Spiel beitreten“ nimmt den Code entgegen
+- Eine einfache Karte mit zwei Figuren, die man per Tippen bewegt
+- Automatischer Build: Jeder Push auf `master` stellt die neue Version online
+- Kurze Anleitung im README: Link öffnen, zum Home-Bildschirm hinzufügen, Spiel erstellen und beitreten
 
-✅ **Fertig, wenn:** Zwei Handys sind verbunden und jedes zeigt die Figur des anderen an.
+✅ **Fertig, wenn:**
+- iPhone und Android verbinden sich über den Code, im selben WLAN und auch über Mobilfunk
+- Jeder sieht die eigene Figur und die Figur des Partners laufen
+- Nach kurzem Verbindungsabbruch (z. B. App kurz verlassen) kann man wieder beitreten
+- Das Spiel lädt in akzeptabler Zeit und läuft flüssig auf beiden Handys
 
 ### M1 – Gemeinsam laufen (2–3 Wochen)
 
 - Der Wald wird zufällig erzeugt: Bäume, Lichtungen und ein Ausgang
-- Zwei Spielfiguren, die man per Tippen bewegt
 - Rundenablauf mit gleichzeitigen Zügen
 - Bäume versperren die Sicht, beide Spieler teilen ihr Sichtfeld
 - Am Ausgang geht es gemeinsam zur nächsten Etage
@@ -119,8 +135,8 @@ In ungefähr dieser Reihenfolge:
 1. Tafel-Skillsystem: Der Skillbaum wächst über viele Runs hinweg
 2. Erste Edelsteine: Jade und Bernstein
 3. Tiefere Zonen mit stärkerer Magie (Topas, Saphir, Rubin, Diamant) und ein Endboss
-4. Spielen über das Internet, Tutorial, zwei Schwierigkeitsgrade
-5. iOS-Version und Veröffentlichung in den App-Stores
+4. Tutorial, zwei Schwierigkeitsgrade
+5. Native Apps für Android und iOS und Veröffentlichung in den App-Stores
 
 **Nicht geplant:** Onyx (Nekromantie), mehr als zwei Spieler, weitere Klassen.
 
@@ -128,7 +144,9 @@ In ungefähr dieser Reihenfolge:
 
 | Was schiefgehen kann | Was wir dagegen tun |
 | --- | --- |
-| Auf den beiden Handys ist nicht mehr dasselbe zu sehen | Nur der Host berechnet das Spiel. Coop ist ab M1 dabei, damit Fehler früh auffallen |
+| Das Spiel läuft im iPhone-Browser nicht gut (Ladezeit, Ton, Leistung) | Genau das testet M0, bevor Spielinhalte entstehen. Notfalls kleinere Grafiken oder später eine native App |
+| Die Verbindung bricht ab, z. B. wenn man das Handy kurz sperrt | Wiederbeitreten mit demselben Code, der Host hält den Spielstand |
+| Auf den beiden Handys ist nicht mehr dasselbe zu sehen | Nur der Host berechnet das Spiel. Coop ist ab M0 dabei, damit Fehler früh auffallen |
 | Zu zweit fühlen sich die Runden langsam an | Beide ziehen gleichzeitig. Außerhalb von Kämpfen läuft man frei |
 | Das Spiel macht keinen Spaß | Ab M2 regelmäßig zur Probe spielen. Lieber Bestehendes verbessern als Neues hinzufügen |
 
@@ -144,5 +162,5 @@ Diese Fragen klären wir beim Probespielen in M2 und M3:
 ## Arbeitsweise
 
 - Wir arbeiten direkt auf `master`. Der Stand dort muss immer lauffähig sein.
-- Bei jedem Push baut GitHub automatisch die App und führt die Tests aus.
+- Bei jedem Push baut GitHub automatisch die Web-Version, führt die Tests aus und stellt sie online.
 - Nach jedem Meilenstein spielen wir zusammen und passen den Plan an.
