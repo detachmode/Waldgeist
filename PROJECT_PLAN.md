@@ -1,214 +1,148 @@
 # Waldgeist – Projektplan
 
-Dieser Plan führt vom Game-Design im [README](README.md) und in der [Skill-Doku](docs/skill-tree.md) zu einem spielbaren Coop-Prototyp auf dem Handy und danach zur ersten veröffentlichbaren Version. Er ist in Meilensteine gegliedert, die jeweils mit etwas Spielbarem enden. Zeitangaben sind grobe Schätzungen für ein kleines Team (1–2 Personen, Teilzeit) und werden nach jedem Meilenstein neu bewertet.
+## Worum es geht
 
-## Ziele
+Wir bauen zuerst nur eines: **zwei Spieler gehen auf zwei Handys gemeinsam durch den Wald, und das macht Spaß.**
 
-1. **Prototyp:** Zwei Spieler laufen gemeinsam durch die ersten zwei Waldzonen, kämpfen rundenbasiert, fällen Bäume, bauen Barrikaden und lernen Fähigkeiten aus einem festen Skillbaum.
-2. **Vertical Slice:** Das Tafel-Skillsystem als Meta-Progression funktioniert über mehrere Runs, inklusive Sockeln von Jade und Bernstein.
-3. **Version 1.0:** Alle vier Magiestufen, fünf Zonen mit Endboss, beide Startklassen, vier Holzthemen (Eiche, Moos, Dorn, Lagerfeuer), zwei Schwierigkeitsgrade, stabile Online-Coop-Partien auf Android und iOS.
+Alles andere kommt später. Das Tafel-Skillsystem, die Edelsteine, die tieferen Zonen und die Veröffentlichung im Store warten, bis dieser Kern funktioniert.
 
-## Nicht-Ziele für 1.0
+Das Spieldesign steht im [README](README.md) und in der [Skill-Doku](docs/skill-tree.md).
 
-- Onyx und Beschwörungen mit Wegfindung (laut Skill-Doku bewusst nach dem Prototyp)
-- Mehr als zwei Spieler
-- Monetarisierung, Ranglisten, Accounts mit Cloud-Speicher
-- Weitere Klassen über Holzfäller und Waldläuferin hinaus
+## Der Spielablauf im Coop
 
-## Engine: Godot 4 (entschieden)
+Ein Run läuft immer gleich ab. Diese Schleife ist das Herz des Spiels:
 
-Waldgeist wird mit **Godot 4** umgesetzt. Daraus ergeben sich folgende technische Festlegungen:
+```
+  ┌───────────────────────────────────────────────────────────┐
+  │                                                           │
+  ▼                                                           │
+1. Erkunden  ─►  2. Kämpfen  ─►  3. Versorgen  ─►  4. Stärker werden  ─►  5. Tiefer gehen
+```
 
-| Bereich | Festlegung | Begründung |
+1. **Erkunden:** Beide Spieler laufen durch eine Etage des Waldes. Jeder sieht auch, was der andere sieht. Laufen kostet keine Nahrung, man darf sich also ruhig aufteilen.
+2. **Kämpfen:** Die Spieler treffen auf Banditen, Tiere und Fallen. Der Holzfäller hält die Gegner im Nahkampf auf, die Waldläuferin schießt aus der Distanz. Wer einen Baum fällt, kann ihn auf Gegner stürzen lassen. Aus Holz baut man Barrikaden, die Gegner aufhalten.
+3. **Versorgen:** Jede Aktion (angreifen, hacken, bauen) kostet Nahrung. Nahrung bekommt man, indem man Tiere jagt und das Fleisch am Lagerfeuer kocht. In Hütten findet man Beute, manchmal aber auch Gegner.
+4. **Stärker werden:** Beide Spieler bekommen dieselbe Erfahrung und steigen gleichzeitig auf. Pro Aufstieg gibt es einen Skillpunkt für eine neue Fähigkeit.
+5. **Tiefer gehen:** Am Ausgang geht es gemeinsam zur nächsten Etage. Dort wird der Wald gefährlicher.
+
+**Wenn es schiefgeht:** Fallen die Lebenspunkte eines Spielers auf null, stirbt er nicht sofort, sondern liegt am Boden. Der Partner kann ihn wiederbeleben. Erst wenn beide am Boden liegen, ist der Run vorbei.
+
+### Warum das im Coop funktioniert
+
+- **Unterschiedliche Rollen:** Einer steht vorne, die andere hinten. Keiner schafft es allein so gut.
+- **Man braucht sich:** Nur der Partner kann einen wiederbeleben. Nahrung ist knapp und muss geteilt werden.
+- **Gemeinsamer Fortschritt:** Weil beide gleichzeitig aufsteigen, fällt niemand zurück.
+
+## Technik
+
+Das Spiel wird mit der Engine **Godot 4** gebaut.
+
+| Thema | Entscheidung | In einfachen Worten |
 | --- | --- | --- |
-| Version | Aktuelle stabile Godot-4.x-Version, im Repo festgehalten (`project.godot`, CI-Image) | Alle Beteiligten und die CI bauen mit derselben Version |
-| Sprache | GDScript mit statischen Typen | Beste Unterstützung beim Export für Android und iOS; C# ist auf Mobilgeräten weniger ausgereift |
-| Karte | `TileMapLayer` mit 16×16-Kacheln | Eingebautes Rendering, Kollision und Navigation für Rasterkarten |
-| Spiellogik | Reine GDScript-Klassen (`RefCounted`) ohne Abhängigkeit von Nodes | Simulation lässt sich ohne Szene testen und im Coop zwischen Host und Client synchronisieren |
-| Fähigkeiten und Gegner | Eigene `Resource`-Typen (`.tres`), Hook-Logik als kleine Skripte | Werte im Editor pflegbar, Balancing ohne Codeänderung |
-| Ereignisbus | Autoload-Singleton mit Signalen für alle 19 Hooks | Globale Coop-Hooks erreichen jeden Akteur |
-| Coop im LAN | `ENetMultiplayerPeer` und `@rpc`-Aufrufe, Host-autoritativ | Im High-Level-Multiplayer von Godot enthalten |
-| Coop im Internet | `WebSocketMultiplayerPeer` über einen kleinen Relay-Server, alternativ `WebRTCMultiplayerPeer` mit Signalisierung | Umgeht NAT-Probleme zwischen Handys |
-| Speicherstand | `ConfigFile` oder JSON in `user://`, mit Versionsnummer | Plattformunabhängig, migrierbar |
-| Tests | GUT oder gdUnit4, headless in der CI | Hooks und Fähigkeiten automatisiert prüfen |
-| CI | GitHub Actions mit Godot-Headless-Image, Export-Vorlagen für Android | APK bei jedem Push |
-| Touch-Eingabe | `InputEventScreenTouch` und `InputEventScreenDrag`, Anzeige skaliert per `stretch_mode = canvas_items` | Einheitlich auf verschiedenen Bildschirmgrößen |
+| Programmiersprache | GDScript mit Typangaben | Die Standardsprache von Godot. Läuft problemlos auf Android und iOS |
+| Coop-Verbindung | Ein Handy ist der **Host** | Nur der Host berechnet das Spiel. Das zweite Handy schickt nur, was sein Spieler tun will, und zeigt das Ergebnis an. So können die beiden Spielstände nie voneinander abweichen |
+| Verbindungsart | Erst WLAN, Internet später | Im selben WLAN ist es am einfachsten. Spielen über das Internet kommt nach dem Prototyp |
+| Züge | Beide wählen gleichzeitig | In einer Runde wählen beide Spieler ihren Zug, dann passiert alles zusammen. Niemand muss auf den anderen warten. Außerhalb von Kämpfen läuft man frei herum |
+| Spiellogik getrennt von der Grafik | Eigener Ordner `core/` | Die Regeln des Spiels wissen nichts von Bildern oder Animationen. Dadurch lassen sie sich leicht testen und über das Netzwerk abgleichen |
+| Karte | Raster aus Kacheln mit 16×16 Pixeln | Pixel-Art wie in Shattered Pixel Dungeon |
+| Spielwerte | In Datendateien (`.tres`) | Schaden, Lebenspunkte usw. lassen sich ändern, ohne Code anzufassen |
+| Tests | GUT oder gdUnit4 | Automatische Tests prüfen, ob die Spielregeln stimmen |
+| Automatischer Build | GitHub Actions | Bei jedem Push entsteht automatisch eine installierbare Android-App (APK) |
 
-### Weitere Grundsatzentscheidungen (Meilenstein 0)
-
-| Entscheidung | Optionen | Empfehlung | Begründung |
-| --- | --- | --- | --- |
-| Coop-Modell | Host-autoritativ, Lockstep, dedizierter Server | Host-autoritativ (ein Handy ist Host) | Rundenbasiert und nur 2 Spieler: wenig Bandbreite, keine Serverkosten, Zufall liegt nur beim Host |
-| Verbindung | LAN/WLAN, Relay-Server, Bluetooth | Erst LAN, dann Relay für Internet-Partien | LAN reicht zum Testen, Relay löst NAT-Probleme für 1.0 |
-| Rundensystem | Strikt abwechselnd, simultane Züge, Zeitbudget | Simultane Planung, gemeinsame Auflösung pro Runde | Kein Warten auf den Partner, passt zu „Laufen kostet kaum Nahrung“ |
-| Grafikstil | Pixel-Art 16×16, 32×32 | 16×16 wie SPD | Schnell zu produzieren, gut lesbar auf dem Handy |
-
-### Projektstruktur
+### Ordnerstruktur
 
 ```
 waldgeist/
-├── project.godot
-├── autoload/        # EventBus, GameState, Net
-├── core/            # reine Spiellogik: Karte, Akteure, Runden, Effekte
-├── data/            # .tres-Ressourcen: Fähigkeiten, Tafeln, Steine, Gegner
-├── scenes/          # Spielfeld, HUD, Charakterbildschirm, Lobby
-├── net/             # Host- und Client-Logik, Nachrichtenformat
-├── assets/          # Sprites, Kacheln, Audio, Schriften
-└── tests/           # GUT- bzw. gdUnit4-Tests
+├── autoload/   Dinge, die immer da sind: Ereignisse, Netzwerk
+├── core/       Spielregeln: Karte, Figuren, Runden, Kampf
+├── data/       Spielwerte: Gegner, Fähigkeiten
+├── scenes/     Bildschirme: Spielfeld, Anzeige, Lobby
+├── net/        Verbindung zwischen Host und zweitem Handy
+├── assets/     Grafiken und Sounds
+└── tests/      Automatische Tests
 ```
-
-**Ergebnis M0:** Godot-Projekt mit obiger Struktur, EventBus-Autoload, Test-Framework eingerichtet, CI baut ein Android-APK, das leere Projekt läuft auf einem Testgerät.
 
 ## Meilensteine
 
-### M1 – Solo-Kern (ca. 4–6 Wochen)
+Coop ist von Anfang an dabei. Wir bauen nicht erst ein Einzelspieler-Spiel und fügen den Coop später hinzu, denn das nachträglich einzubauen ist sehr aufwendig und fehleranfällig.
 
-Rundenbasiertes Roguelike für einen Spieler, noch ohne Skills und ohne Netzwerk.
+Die Zeiten sind grobe Schätzungen.
 
-- Hex- oder Quadratraster für die Karte festlegen (Skillbaum ist Hex, Karte darf Quadrat bleiben)
-- Prozedurale Waldgenerierung: Lichtungen, Pfade, Bäume, Unterholz, Ausgang zur nächsten Etage
-- Sichtfeld (FOV) mit Bäumen und Unterholz als Sichtblocker
-- Bewegung, Nahkampf, Fernkampf mit aufsammelbaren Pfeilen
-- Nahrungssystem: Aktionen kosten Nahrung, Laufen nicht; Hunger zieht HP ab
-- Bäume fällen (3 Hiebe), Fall-Linie mit Schaden, Holz sammeln
-- Barrikaden und kleine Türme bauen (Sichtweite +)
-- Tiere jagen und am Lagerfeuer Essen kochen
-- Hütten im Wald, die man betreten kann (Beute oder Gegner)
-- Erste Gegner der Zone 1: Banditen, 2–3 Tiere, Fallen
-- Touch-Steuerung: Tippen zum Laufen, Wischen/Halten für Aktionen
+### M0 – Grundgerüst (1 Woche)
 
-**Abnahme:** Ein Run durch 3 Etagen von Zone 1 ist auf dem Handy spielbar und endet mit Tod oder Ausgang.
+- Godot-Projekt mit der Ordnerstruktur anlegen
+- Automatischen Build einrichten
+- Zwei Handys verbinden sich im WLAN
 
-### M2 – Effektsystem und Startklassen (ca. 3–4 Wochen)
+✅ **Fertig, wenn:** Zwei Handys sind verbunden und jedes zeigt die Figur des anderen an.
 
-- Zentraler Ereignisbus mit allen 19 Hooks aus der Skill-Doku (von Anfang an global, wegen Coop-Hooks)
-- Stat-Modifikatoren, aktive Fähigkeiten mit Abklingzeit, Zustände (Gift, Brand, Verlangsamung, Festwurzeln, Schild)
-- Fähigkeiten als `Resource`-Dateien definiert, Hook-Logik als kleine GDScript-Skripte
-- Klassensteine Holzfäller und Waldläuferin mit je 3 Fähigkeiten à 1 Rang
-- Erfahrung, Level-Up, 1 Skillpunkt pro Level, Lernen nur außerhalb von Begegnungen
-- 3 Schnelltasten für aktive Fähigkeiten
-- Unit-Tests für jeden Hook und jede Fähigkeit des Kerns
+### M1 – Gemeinsam laufen (2–3 Wochen)
 
-**Abnahme:** Beide Klassen spielen sich spürbar unterschiedlich; alle Hooks sind durch Tests abgedeckt.
+- Der Wald wird zufällig erzeugt: Bäume, Lichtungen und ein Ausgang
+- Zwei Spielfiguren, die man per Tippen bewegt
+- Rundenablauf mit gleichzeitigen Zügen
+- Bäume versperren die Sicht, beide Spieler teilen ihr Sichtfeld
+- Am Ausgang geht es gemeinsam zur nächsten Etage
 
-### M3 – Coop (ca. 5–7 Wochen, größtes Risiko)
+✅ **Fertig, wenn:** Zwei Spieler laufen zusammen durch drei Etagen, und auf beiden Handys ist immer genau dasselbe zu sehen.
 
-- Spielzustand (`core/`) strikt von Nodes und Rendering trennen (Voraussetzung für Synchronisierung)
-- Host-autoritative Simulation: Clients senden Absichten, Host löst auf und verteilt Ergebnisse
-- Lobby über LAN mit `ENetMultiplayerPeer`, Beitreten per Code oder QR
-- Geteilte Erfahrung, gleichzeitiges Level-Up
-- Niederschlagen und Wiederbeleben statt sofortigem Tod
-- Coop-Hooks aktiv: `on_damage`, `on_ally_hit`, `on_ally_downed`, `on_revive`
-- Sichtfeld-Teilen (Markierungen wie Baumflüsterer)
-- Umgang mit Verbindungsabbruch: Pause, Wiederverbinden, Host-Wechsel oder sauberes Beenden
-- Determinismus-Tests: gleiche Eingaben ergeben beim Host gleiche Ergebnisse, Replays zur Fehlersuche
+### M2 – Der komplette Spielablauf (4–6 Wochen)
 
-**Abnahme:** Zwei Handys spielen einen kompletten Run durch Zone 1 ohne Desync; Abbruch und Wiederverbinden funktioniert.
+- Nahkampf und Fernkampf. Pfeile bleiben liegen und können wieder aufgesammelt werden
+- Gegner der ersten Zone: Banditen, zwei bis drei Tierarten, Fallen
+- Bäume fällen: Der Baum fällt in eine Richtung und verletzt alle Gegner in dieser Linie. Dabei gibt es Holz
+- Barrikaden aus Holz bauen
+- Nahrung: Aktionen kosten Nahrung. Wer hungert, verliert stattdessen Lebenspunkte
+- Tiere jagen und am Lagerfeuer kochen
+- Hütten mit Beute oder Gegnern
+- Am Boden liegen und wiederbeleben
+- Gemeinsame Erfahrung und gleichzeitiger Aufstieg
 
-### M4 – Prototyp-Zone 2 und Holzthemen (ca. 4–5 Wochen)
+✅ **Fertig, wenn:** Zwei Spieler können einen ganzen Run durch die erste Zone spielen, vom Start bis zum Ende oder bis zur Niederlage.
 
-- Zone 2 mit erster Naturmagie bei Gegnern
-- Themen Eiche, Moos, Dorn mit allen in der Skill-Doku beschriebenen Fähigkeiten
-- Lagerfeuer-Thema, sobald sein Fähigkeitenpool festgelegt ist
-- Fester Test-Skillbaum (ohne Tafeln), um die Fähigkeiten zu balancieren
-- Coop-Kombos aus der Skill-Doku gezielt testen (Köder und Hecke, Baumfalle, Gift und Fessel)
+### M3 – Klassen und Spaß-Test (3–4 Wochen)
 
-**Abnahme = Prototyp:** Interner Playtest mit mindestens 5 Paaren, Feedbackbogen ausgewertet.
+- Holzfäller und Waldläuferin bekommen ihre drei festen Klassenfähigkeiten
+- Eine kleine, feste Auswahl an Fähigkeiten, die man mit Skillpunkten lernt. Noch ohne Tafeln
+- Darunter zwei bis drei Coop-Fähigkeiten, zum Beispiel:
+  - *Schützender Ast:* Man fängt einen Teil des Schadens ab, den der Partner bekommt
+  - *Heilende Hände:* Man belebt den Partner schneller wieder
+- Mindestens eine Kombination, bei der beide zusammenarbeiten müssen. Beispiel: Der Holzfäller lockt Gegner in eine Reihe, die Waldläuferin fällt einen Baum auf genau diese Reihe
+- Mehrere Paare spielen das Spiel zur Probe, danach wird nachgebessert
 
-### M5 – Tafel-Skillsystem als Meta-Progression (ca. 5–6 Wochen)
+✅ **Fertig, wenn:** Die Testpaare nach einem Run von sich aus noch eine Runde spielen wollen. **Das ist das wichtigste Ziel des ganzen Plans.**
 
-- Speicherstand für dauerhafte Tafeln und Steine (lokal, versioniert, migrierbar)
-- Tafel-Würfelregeln: 3 aus 6 Fähigkeiten, höchstens eine aktive, starke Fähigkeit ab Zone 3
-- Verwitterte Tafeln im Run, Auflösung am Run-Ende
-- Charakterbildschirm: Hex-Raster um den Klassenstein, Ringe, Drag-and-drop, Platzierungsregeln
-- Erreichbarkeit im Run: Ausgänge und Verbindungen zwischen Tafeln, Pfade innerhalb einer Tafel
-- Kaputte Tafeln (weniger Fähigkeiten oder fehlender Sockel)
-- Coop-Deckel: Ausschnitt-Auswahl für stärkere Spieler, zusammenhängend am Kern
-- Duplikat-Regeln (Rang +1, alternativer Zugang, Abklingzeit −30 %)
-- Abgleich der Skillbäume beider Spieler in der Lobby
+## Später (erst wenn M3 überzeugt)
 
-**Abnahme:** Drei aufeinanderfolgende Runs bauen einen Baum sichtbar auf; der Deckel greift korrekt bei ungleichen Spielern.
+In ungefähr dieser Reihenfolge:
 
-### M6 – Edelsteine Natur (ca. 3–4 Wochen)
+1. Tafel-Skillsystem: Der Skillbaum wächst über viele Runs hinweg
+2. Erste Edelsteine: Jade und Bernstein
+3. Tiefere Zonen mit stärkerer Magie (Topas, Saphir, Rubin, Diamant) und ein Endboss
+4. Spielen über das Internet, Tutorial, zwei Schwierigkeitsgrade
+5. iOS-Version und Veröffentlichung in den App-Stores
 
-- Sockeln mit Bestätigung, Bindung, Leuchtfarbe
-- Jade und Bernstein mit allen Fähigkeiten
-- Baumwächter als stationäre Beschwörung (Testlauf für spätere Onyx-KI)
-- Lernbedingung: ein Pfad von einer gelernten Fähigkeit der Tafel zur Magiefähigkeit
-- Grenzen der Natur-Magie einhalten (Rang 1, ein Ziel, Zustände höchstens 2 Runden)
-- Mindestring-Regeln
+**Nicht geplant:** Onyx (Nekromantie), mehr als zwei Spieler, weitere Klassen.
 
-**Abnahme = Vertical Slice:** Externer Playtest (geschlossene Beta) auf Android.
+## Größte Risiken
 
-### M7 – Elementar, Licht und Dunkel, Zonen 3–5 (ca. 8–10 Wochen)
-
-- Topas: Feuer- und Blitzsystem, Nässe, Waldbrand-Ausbreitung, halbe Feuerfestigkeit
-- Saphir: Wasser und Eis, Nässe als Verstärker für Topas-Blitze, Löschen gegen Friendly Fire
-- Rubin und Diamant
-- Zonen 3–5 mit eigenen Gegnern und Umgebungen
-- Endboss inklusive seltenem Notausgang-Gegenstand
-- Coop-Regel: unter 3 Tafeln keine dunkle Magie und keine Diamanten
-
-### M8 – Release-Vorbereitung (ca. 6–8 Wochen)
-
-- Internet-Coop über Relay-Server (`WebSocketMultiplayerPeer` oder WebRTC), Einladungslinks
-- Tutorial und erste Etage als geführter Einstieg
-- Zwei Schwierigkeitsgrade, vor dem Run wählbar
-- Audio, Effekte, Barrierefreiheit (Schriftgröße, Farbunterscheidung der Steine)
-- Leistungstests auf schwachen Geräten, Akkuverbrauch
-- iOS-Build, Store-Einträge, Datenschutzerklärung
-- Absturzberichte und anonyme Balancing-Telemetrie (opt-in)
-
-**Abnahme = 1.0:** Veröffentlichung in Google Play und App Store.
-
-## Zeitplan (grob)
-
-| Meilenstein | Dauer | Kumuliert |
-| --- | --- | --- |
-| M0 Godot-Setup und Entscheidungen | 1–2 Wochen | ~2 Wochen |
-| M1 Solo-Kern | 4–6 Wochen | ~8 Wochen |
-| M2 Effektsystem | 3–4 Wochen | ~12 Wochen |
-| M3 Coop | 5–7 Wochen | ~19 Wochen |
-| M4 Prototyp | 4–5 Wochen | ~24 Wochen |
-| M5 Tafelsystem | 5–6 Wochen | ~30 Wochen |
-| M6 Natursteine | 3–4 Wochen | ~34 Wochen |
-| M7 Magie und Zonen | 8–10 Wochen | ~44 Wochen |
-| M8 Release | 6–8 Wochen | ~52 Wochen |
-
-## Risiken
-
-| Risiko | Auswirkung | Gegenmaßnahme |
-| --- | --- | --- |
-| Desync im Coop | Unspielbare Partien | Host-autoritativ, Zustand strikt von Darstellung trennen, Replays, Coop früh (M3) statt spät |
-| Rundenablauf zu zweit fühlt sich zäh an | Spielspaß leidet | Simultane Züge früh prototypen, Laufen außerhalb von Begegnungen frei |
-| Tafelsystem zu komplex auf kleinem Bildschirm | Spieler verstehen Meta-Progression nicht | Papierprototyp und UI-Mockups vor M5, Tutorial-Tafel |
-| Balancing bei ~50 Fähigkeiten | Dominante Builds, tote Fähigkeiten | Datengetriebene Werte, Playtest-Telemetrie, Balancing-Tabellen |
-| Waldbrand-Simulation zu teuer | Ruckeln auf alten Handys | Zellbasierte Ausbreitung pro Runde, Obergrenze aktiver Brandfelder |
-| Umfang wächst (Onyx, weitere Klassen, Jagd als 5. Thema) | Release verschiebt sich | Nicht-Ziele einhalten, Ideen in Backlog nach 1.0 |
-
-## Offene Designpunkte und wann sie entschieden werden
-
-| Offener Punkt (aus der Skill-Doku) | Entscheiden in |
+| Was schiefgehen kann | Was wir dagegen tun |
 | --- | --- |
-| Skillpunkte pro Run (~15) | M4-Playtest |
-| Deckel lockern auf Minimum + 1 | M5-Playtest |
-| Drop-Raten für Tafeln und Steine | M5 (Tafeln), M6/M7 (Steine) |
-| Seltenheit des Notausgangs | M7 |
-| Fähigkeitenpool für Lagerfeuer | vor M4 |
-| Einstieg, Ausgänge und kaputte Tafeln | vor M5 (Papierprototyp) |
-| Tafelbilder pro Thema (leer und gesockelt) | parallel zu M5 |
-| Natur-Magie und Baumwächter schwach genug? | M6-Playtest |
-| Saphir gegen Friendly Fire von Topas | M7-Playtest |
-| Jagd als fünftes Thema | nach 1.0 oder M7, falls Zeit bleibt |
-| Gestrichene Glut-Fähigkeiten zurückholen | M7 beim Topas-Balancing |
-| Onyx | nach 1.0 |
-| Pool auf 10–12 pro Thema ausbauen | fortlaufend ab M5 |
-| Weitere Klassen | nach 1.0 |
+| Auf den beiden Handys ist nicht mehr dasselbe zu sehen | Nur der Host berechnet das Spiel. Coop ist ab M1 dabei, damit Fehler früh auffallen |
+| Zu zweit fühlen sich die Runden langsam an | Beide ziehen gleichzeitig. Außerhalb von Kämpfen läuft man frei |
+| Das Spiel macht keinen Spaß | Ab M2 regelmäßig zur Probe spielen. Lieber Bestehendes verbessern als Neues hinzufügen |
+
+## Offene Fragen
+
+Diese Fragen klären wir beim Probespielen in M2 und M3:
+
+- **Nahrung:** Wie knapp muss sie sein, damit sie spannend ist, aber nicht nervt?
+- **Abstand:** Dürfen sich die Spieler beliebig weit voneinander entfernen?
+- **Länge:** Wie lange soll ein Run durch die erste Zone dauern? Vorschlag: 15 bis 20 Minuten.
+- **Wiederbeleben:** Wie oft darf man wiederbelebt werden, bevor es zu leicht wird?
 
 ## Arbeitsweise
 
-- Jeder Meilenstein bekommt ein GitHub-Milestone mit Issues pro Aufgabe.
-- Hauptzweig bleibt jederzeit baubar; Arbeit in Feature-Branches mit Pull Requests.
-- CI baut bei jedem Push mit Godot headless ein Android-APK und führt die Tests aus.
-- Nach jedem Meilenstein: kurzer Playtest, Rückblick, Plan anpassen.
-- Alle Balancing-Zahlen stehen in Datendateien, nicht im Code.
+- Wir arbeiten direkt auf `master`. Der Stand dort muss immer lauffähig sein.
+- Bei jedem Push baut GitHub automatisch die App und führt die Tests aus.
+- Nach jedem Meilenstein spielen wir zusammen und passen den Plan an.
